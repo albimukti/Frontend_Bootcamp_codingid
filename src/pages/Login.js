@@ -31,7 +31,7 @@ const Login = () => {
                     </form>
                     <Typography sx={{mt:2}}>
                         Forgot Password?
-                        <Link to='/forgot-password' style={{textDecoration:'none', color:'#2F80ED'}}> Click here</Link>
+                        <Link to='/reset-password' style={{textDecoration:'none', color:'#2F80ED'}}> Click here</Link>
                     </Typography>
                     <Stack direction="row" justifyContent={{lg:"flex-end", xs:"center"}}>
                         <ThemeProvider theme={secondary} >
