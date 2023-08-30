@@ -1,25 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Landingpage from "./pages/Landingpage";
-import Register from "./pages/Register";
-<<<<<<< HEAD
-=======
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Landingpage from './pages/Landingpage';
+import Register from './pages/Register';
 import Login from './pages/Login';
-
-
->>>>>>> 577325d (push form login dari Albi)
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
     <Router>
       <Routes>
-<<<<<<< HEAD
-        <Route path="/" element={<Landingpage/>}/>
-        <Route path="/register" element={<Register/>} />
-=======
         <Route path="/" element={<Landingpage />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
->>>>>>> 577325d (push form login dari Albi)
+        <Route path="/Login" element={<Login />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );
