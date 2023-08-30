@@ -31,7 +31,7 @@ const Register = () => {
                         <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Name" variant="outlined" type='text' />
                         <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' />
                         <TextField sx={{mt:3}} fullWidth id="outlined-password-input" label="Password" type="password" variant="outlined"/>
-                        <TextField sx={{mt:3}} fullWidth id="outlined-password-input" label="Confirm Password" type="password" variant="outlined"/>
+                        <TextField sx={{mt:3}} fullWidth id="outlined-confirm-password-input" label="Confirm Password" type="password" variant="outlined"/>
                     </form>
                     <Stack direction="row" justifyContent={{lg:"flex-end", xs:"center"}}>
                         <ThemeProvider theme={secondary} >

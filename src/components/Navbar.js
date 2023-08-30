@@ -43,12 +43,12 @@ const Navbar = () => {
           <Stack direction='row' spacing={2}>
             <ThemeProvider theme={primary}>
               <Link to='/login'>
-                <Button sx={{px:5, borderRadius:2}} variant='outlined' style={{color:'black'}}>Login</Button>
+                <Button sx={{px:5, borderRadius:2}} variant='outlined'>Login</Button>
               </Link>
             </ThemeProvider>
             <ThemeProvider theme={secondary}>
               <Link to='/register'>
-                <Button sx={{px:4, borderRadius:2}} variant='contained'>Register</Button>
+                <Button sx={{px:4, borderRadius:2, color:primary}} variant='contained'>Register</Button>
               </Link>
             </ThemeProvider>
           </Stack>
