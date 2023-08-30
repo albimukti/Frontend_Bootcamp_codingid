@@ -42,7 +42,13 @@ const Navbar = () => {
         <Typography component='div' sx={{ flexGrow: 1 }}></Typography>
         <Stack direction='row' spacing={2}>
           <ThemeProvider theme={primary}>
+<<<<<<< HEAD
             <Button sx={{px:5, borderRadius:2}} variant='outlined' style={{color:'black'}}>Login</Button>
+=======
+          <Link to='/login'>
+            <Button sx={{px:5, borderRadius:2}} variant='outlined' style={{color:'black'}}>Login</Button>
+            </Link>
+>>>>>>> 577325d (push form login dari Albi)
           </ThemeProvider>
           <ThemeProvider theme={secondary}>
             <Link to='/register'>
