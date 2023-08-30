@@ -50,7 +50,7 @@ const ResetPassword = () => {
                         Send OTP code to your email address
                     </Typography>
                     <Box sx={{mt:2}}>
-                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" abel="Email" variant="outlined" type='email' 
+                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' 
                         value={email} onChange={(e) => setEmail(e.target.value)} /> 
                         <Typography sx={{mt:1, color:'red', visibility:invalid}}>
                             Email is not valid
