@@ -1,13 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landingpage from "./pages/Landingpage";
 import Register from "./pages/Register";
+import Login from "./pages/Login"
+import SuccessRegister from "./pages/SuccessRegister";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Landingpage/>}/>
-        <Route path="/register" element={<Register/>} />
+        <Route path = "/" element = {<Landingpage/>} />
+        <Route path = "/register" element = {<Register/>} />
+        <Route path = "/login" element = {<Login/>} />
+        <Route path = "/success-register" element = {<SuccessRegister/>} />
       </Routes>
     </Router>
   );
