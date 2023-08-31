@@ -23,29 +23,22 @@ const ForgotPassword = () => {
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    const [invalid, setInvalid] = useState('hidden')
+    const [passwordError, setPasswordError] = useState(',');
 
-    const handleNewPasswordChange = (event) => {
-        const newPasswordValue = event.target.value;
-        setNewPassword(newPasswordValue);
-        validatePassword(newPasswordValue, confirmPassword);
-    };
-
-    const handleConfirmPasswordChange = (event) => {
-        const confirmPasswordValue = event.target.value;
-        setConfirmPassword(confirmPasswordValue);
-        validatePassword(newPassword, confirmPasswordValue);
-    };
-
-    const validatePassword = (newPwd, confirmPwd) => {
-        if (newPwd.length > 16 || !/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPwd)) {
+    const validateNewPassword = () => {
+        if (newPassword.length > 16 || !/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
+            setInvalid('visible')
             setPasswordError('Password must be up to 16 characters and contain letters and numbers');
-        } else if (newPwd !== confirmPwd) {
-            setPasswordError('Passwords do not match');
-        } else {
-            setPasswordError('');
-        }
+          }
     };
+
+    const validateConfirmPassword = () => {
+        if (newPassword !== confirmPassword) {
+            setInvalid('visible')
+            setPasswordError('Passwords do not match');
+          }
+    }
 
     const handleResetPassword = () => {
         if (!passwordError) {
@@ -61,15 +54,15 @@ const ForgotPassword = () => {
         <div>
             <Navbar />
             <Grid sx={{ mt: 10 }} container>
-                <Grid xs={3}></Grid>
-                <Grid xs={6} xsOffset={3}>
+                <Grid md={3} xs={1}></Grid>
+                <Grid md={6} xs={10}>
                     <Typography variant='h5'>
                         Reset Password
                     </Typography>
                     <Typography sx={{ pt: 1 }}>
                         Enter your new password and confirm it
                     </Typography>
-                    <form>
+                    <Box sx={{mt:0}}>
                         <TextField
                         sx={{ mt: 3 }}
                         fullWidth
@@ -78,7 +71,8 @@ const ForgotPassword = () => {
                         variant="outlined"
                         type="password"
                         value={newPassword}
-                        onChange={handleNewPasswordChange}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        onBlur={validateNewPassword}
                         />
                         <TextField
                         sx={{ mt: 3 }}
@@ -88,14 +82,13 @@ const ForgotPassword = () => {
                         variant="outlined"
                         type="password"
                         value={confirmPassword}
-                        onChange={handleConfirmPasswordChange}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onBlur={validateConfirmPassword}
                         />
-                    </form>
-                    {passwordError && (
-                        <Typography sx={{ color: 'red', mt: 1 }}>
+                        <Typography sx={{mt:1, color:'red', visibility:invalid}}>
                             {passwordError}
-                        </Typography>
-                        )}
+                        </Typography> 
+                    </Box>
                     <Stack direction="row" spacing={3} justifyContent={{lg:"flex-end", xs:"center"}}>
                         <ThemeProvider theme={primary}>
                             <Link to='/login'>

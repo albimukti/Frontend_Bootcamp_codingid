@@ -1,11 +1,17 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
+import Header from '../components/Header'
+import Body from '../components/Body'
+import Footer from '../components/Footer'
 
 const Landingpage = () => {
+
   return (
     <div>
       <Navbar/>
-      <h1>Ini Landing Pages</h1>
+      <Header/>
+      <Body/>
+      <Footer/>
     </div>
   )
 }
