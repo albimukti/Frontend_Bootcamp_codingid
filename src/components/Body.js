@@ -88,66 +88,25 @@ const Body = () => {
             </Box>
             <Box sx={{px:10, py:6}}>
                 <Grid container spacing={5}>
-                    <Grid item lg={4}>
-                        <Card>
-                            <CardMedia component='img' image='/images/Soup Image/Rectangle 13-2.png'/>
-                                <CardContent>
-                                    <Typography sx={{color:'gray'}}>Asia</Typography>
-                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>Tom Yum Thailand</Typography>
-                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>IDR 450.000</Typography>
-                                </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item lg={4}>
-                        <Card>
-                            <CardMedia component='img' image='/images/Soup Image/Rectangle 12-1.png'/>
-                                <CardContent>
-                                    <Typography sx={{color:'gray'}}>Cold Drink</Typography>
-                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>Strawberry Float</Typography>
-                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>IDR 150.000</Typography>
-                                </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item lg={4}>
-                        <Card>
-                            <CardMedia component='img' image='/images/Soup Image/Rectangle 12-2.png'/>
-                                <CardContent>
-                                    <Typography sx={{color:'gray'}}>Cookies</Typography>
-                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>Chocholate Cookies</Typography>
-                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>IDR 200.000</Typography>
-                                </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item lg={4}>
-                        <Card>
-                            <CardMedia component='img' image='/images/Soup Image/Rectangle 12-3.png'/>
-                                <CardContent>
-                                    <Typography sx={{color:'gray'}}>Dessert</Typography>
-                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>Green Tea Cheesecake</Typography>
-                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>IDR 400.000</Typography>
-                                </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item lg={4}>
-                        <Card>
-                            <CardMedia component='img' image='/images/Soup Image/Rectangle 12-10.png'/>
-                                <CardContent>
-                                    <Typography sx={{color:'gray'}}>Asian</Typography>
-                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>Soto Banjar Limau Kuit</Typography>
-                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>IDR 150.000</Typography>
-                                </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item lg={4}>
-                        <Card>
-                            <CardMedia component='img' image='/images/Soup Image/Rectangle 12-5.png'/>
-                                <CardContent>
-                                    <Typography sx={{color:'gray'}}>Western</Typography>
-                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>Italian Spaghetti Bolognese</Typography>
-                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>IDR 450.000</Typography>
-                                </CardContent>
-                        </Card>
-                    </Grid>
+                    {kelas && kelas.map((list, index) => {
+                        if(index < 6)
+                        return (
+                            <Grid item md={4} xs={12}  key={list.id}>
+                                <Link to={`/detail-kelas/${list.id}/${list.menu[0].id}`} style={{textDecoration: 'none'}}>
+                                    <Card>
+                                        <CardMedia component='img' image={list.menu[0].picture}/>
+                                        <CardContent>
+                                            <Typography sx={{color:'gray'}}>{list.class}</Typography>
+                                            <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.menu[0].name}</Typography>
+                                            <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
+                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.menu[0].price)}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            </Grid>
+                        )
+                    })}  
                 </Grid>
             </Box>
             <Box sx={{backgroundImage: "url('/images/Soup Image/image 4.png')", backgroundSize:'cover', backgroundPosition:'center'}}>
