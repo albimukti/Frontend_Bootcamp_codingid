@@ -40,7 +40,7 @@ const ResetPassword = () => {
     return (
         <div>
             <Navbar/>
-            <Grid sx={{mt:10}} container>
+            <Grid sx={{mt:{md:7, xs:5}}} container>
                 <Grid md={3} xs={1}></Grid>
                 <Grid md={6} xs={10}>
                     <Typography variant='h5'>
@@ -49,7 +49,7 @@ const ResetPassword = () => {
                     <Typography sx={{pt:1}}>
                         Send OTP code to your email address
                     </Typography>
-                    <Box sx={{mt:2}}>
+                    <Box>
                         <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' 
                         value={email} onChange={(e) => setEmail(e.target.value)} /> 
                         <Alert severity='error' sx={{mt: 1, visibility:invalid}}>

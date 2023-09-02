@@ -16,9 +16,9 @@ const Login = () => {
     return (
         <div>
             <Navbar/>
-            <Grid sx={{mt:10}} container>
+            <Grid sx={{mt:{md:10, xs:7}}} container>
                 <Grid md={3} xs={1}></Grid>
-                <Grid md={6} mdOffset={3} xs={10}>
+                <Grid md={6} xs={10}>
                     <Typography variant='h5'>
                         Welcome Back! Cheff
                     </Typography>
@@ -40,7 +40,7 @@ const Login = () => {
                             </Link>
                         </ThemeProvider>
                     </Stack>
-                    <Typography sx={{mt:7}} align='center'>
+                    <Typography sx={{mt:{md:7, xs:5}}} align='center'>
                         Dont have account?
                         <Link to='/register' style={{textDecoration:'none', color:'#2F80ED'}}> Sign Up here</Link>
                     </Typography>
