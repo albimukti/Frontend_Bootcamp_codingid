@@ -9,7 +9,7 @@ const Landingpage = () => {
 
   return (
     <div>
-      <Navbar/>
+    
       <Header/>
       <Body/>
       <Footer/>

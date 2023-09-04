@@ -16,7 +16,7 @@ const SuccessRegister = () => {
 
     return (
         <div>
-            <Navbar/>
+          
             <Grid sx={{mt:10}} container>
                 <Grid md={12}>
                     <Stack alignItems='center'>

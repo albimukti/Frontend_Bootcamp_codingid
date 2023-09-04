@@ -31,7 +31,7 @@ const Body = () => {
 
     //mengambil data dari kelas dengan menggunakan data json-server
     const course = async () => {
-        axios.get(`http://localhost:8080/course/`)
+        axios.get(`http://localhost:8080/course`)
         .then(res => setKelas(res.data))
         .catch(error => {
             console.error(error);
@@ -40,7 +40,7 @@ const Body = () => {
 
     return (
         <div>
-            <Grid container columnSpacing={10} rowSpacing={5} sx={{mt:{md:7, xs:2}, px:{md:20, xs:10}}}>
+            <Grid container columnSpacing={9} rowSpacing={5} sx={{mt:{md:7, xs:2}, px:{md:20, xs:10}}}>
                 <Grid item lg={4} xs={12}>
                     <Card sx={{border:1, borderColor:'grey.400', borderRadius:3}}>
                         <CardContent sx={{display:'flex', flexDirection:'column', alignItems:'center'}}>
@@ -91,9 +91,9 @@ const Body = () => {
                     {kelas && kelas.map((list, index) => {
                         if(index < 6)
                         return (
-                            <Grid item md={4} xs={12}  key={list.id}>
+                            <Grid  item md={4} xs={12}  key={list.id}>
                                 <Link to={`/detail-kelas/${list.id}/${list.menu[0].id}`} style={{textDecoration: 'none'}}>
-                                    <Card>
+                                    <Card >
                                         <CardMedia component='img' image={list.menu[0].picture}/>
                                         <CardContent>
                                             <Typography sx={{color:'gray'}}>{list.class}</Typography>

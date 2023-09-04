@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
-import { Box, Button, Card, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { Box, Card, CardContent, CardMedia, Grid, Typography } from '@mui/material'
 import Footer from '../components/Footer'
 import { Link, useParams } from 'react-router-dom'
 import Axios from 'axios'
@@ -15,7 +14,7 @@ const ListMenuKelas = () => {
     useEffect(() => {
         window.scrollTo(0, 0)
         course()
-    }, [])
+    }, [id])
 
     //mengambil data list menu pada tiap-tiap kelas sesuai dengan id
     const course = async () => {
@@ -28,11 +27,10 @@ const ListMenuKelas = () => {
 
     return (
         <div>
-            <Navbar/>
             {kelas && <Box sx={{backgroundImage: `url('${kelas.image}')`, backgroundSize:'cover', backgroundPosition:'center', height:'310px'}}></Box>}
             {kelas && <Box sx={{py:6, px:10, borderBottom:1, borderColor:'grey.400'}}>
                 <Typography variant='h4' sx={{fontWeight:'bold'}}>{kelas.class}</Typography>
-                <Typography sx={{py:2}}>{kelas.description}</Typography>
+                <Typography sx={{py:2, textAlign:'justify'}}>{kelas.description}</Typography>
             </Box>}
             <Box sx={{py:8, px:10}}>
                 <Typography variant='h4' sx={{textAlign:'center', fontWeight:'bold', color:'#5B4947', pb:8}}>Another menu in this class</Typography>

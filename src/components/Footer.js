@@ -5,22 +5,24 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import EmailIcon from '@mui/icons-material/Email';
+import { Link } from 'react-router-dom';
+import axios from 'axios'
+
 
 const Footer = () => {
-    const [kelas, setKelas] = useState([])
-    const [loaded, setLoaded] = useState(false)
+    const [kelas, setKelas] = useState()
 
     useEffect(() => {
         course()
-    }, [kelas, loaded])
+    }, [])
 
     const course = async () => {
-       const response = await fetch('http://localhost:8080/course')
-       const data = await response.json()
-       setKelas(data)
-       setLoaded(true)
+        axios.get(`http://localhost:8080/course`)
+        .then(res => setKelas(res.data))
+        .catch(error => {
+            console.error(error);
+        });
     }
-    
     return (
         <Box sx={{px:10, py:5, backgroundColor:'#5B4947'}}>
             <Grid container spacing={10}>
@@ -35,16 +37,20 @@ const Footer = () => {
                     <Grid container>
                         <Grid item lg={6}>
                         <ul>
-                            {loaded && kelas.map((list, index) => {
-                                if(index < 4) return (<li style={{color:'white', paddingBottom:10}}>{list.class}</li>)
+                            {kelas && kelas.map((list, index) => {
+                                if(index < 4) return (<Link to = {`/list-menu-kelas/${list.id}`} style={{textDecoration:'none'}} >
+                                <li style={{color:'white', paddingBottom:10}}>{list.class}</li>
+                                </Link> )
                             })}
                             
                         </ul>
                         </Grid>
                         <Grid item lg={6}>
                         <ul>
-                            {loaded && kelas.map((list, index) => {
-                                if(index >= 4) return (<li style={{color:'white', paddingBottom:10}}>{list.class}</li>)
+                            {kelas && kelas.map((list, index) => {
+                                if(index >= 4) return (<Link to = {`/list-menu-kelas/${list.id}`} style={{textDecoration:'none'}} >
+                                <li style={{color:'white', paddingBottom:10}}>{list.class}</li>
+                                </Link> )
                             })}
                             
                         </ul>

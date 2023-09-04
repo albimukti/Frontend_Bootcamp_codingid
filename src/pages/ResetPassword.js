@@ -39,7 +39,7 @@ const ResetPassword = () => {
 
     return (
         <div>
-            <Navbar />
+           
             <Grid sx={{ mt: 10 }} container>
                 <Grid md={3} xs={1}></Grid>
                 <Grid md={6} xs={10}>

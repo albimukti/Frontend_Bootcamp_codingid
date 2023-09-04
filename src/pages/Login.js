@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Typography, TextField, Grid, Button, Stack } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const secondary = createTheme({
@@ -17,15 +17,19 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);    
     const [errorMessage, setErrorMessage] = useState('');
+    const [data, setData] = useState({
+        email : 'albimukti97@gmail.com', password : 'albi123'
+    })
+    const navigate = useNavigate () 
 
     const handleLogin = () => {
-        if (!email.includes('albimukti97@gmail.com')) {
+        if (!email.includes(data.email)) {
             setErrorMessage('Email yang anda masukkan salah!');
             return; 
         }
 
-        if (email === 'albimukti97@gmail.com' && password === 'albi123' ) {
-            window.location.href = 'http://localhost:3000';
+        if (email === (data.email) && password === (data.password) ) {
+            navigate('/')
         } else {
             setErrorMessage('Email atau kata sandi salah. Silakan coba lagi.');
         }
@@ -37,7 +41,7 @@ const Login = () => {
 
     return (
         <div>
-            <Navbar />
+          
             <Grid sx={{ mt: 10 }} container>
                 <Grid md={3} xs={1}></Grid>
                 <Grid md={6} mdOffset={3} xs={10}>
