@@ -1,0 +1,149 @@
+{
+  "user": [
+    {
+      "id": 1,
+      "name": "Naufal Abrori",
+      "email": "nopal.abrori@gmail.com",
+      "password": "Naufal123*"
+    }
+  ],
+  "course": [
+    {
+      "id": 1,
+      "class": "Asian",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "image": "/images/Soup Image/Rectangle 11.png",
+      "menu": [
+        {
+          "name": "Sushi Salmon with Mentai",
+          "price": 200000,
+          "picture": "/images/Soup Image/Rectangle 12-6.png"
+        },
+        {
+          "name": "Ichiraku Ramen",
+          "price": 300000,
+          "picture": "/images/Soup Image/Rectangle 12-7.png"
+        },
+        {
+          "name": "Rendang Sapi",
+          "price": 200000,
+          "picture": "/images/Soup Image/Rectangle 12-8.png"
+        },
+        {
+          "name": "Pempek Palembang",
+          "price": 600000,
+          "picture": "/images/Soup Image/Rectangle 12-9.png"
+        },
+        {
+          "name": "Soto Banjar Limau Kuit",
+          "price": 150000,
+          "picture": "/images/Soup Image/Rectangle 12-10.png"
+        },
+        {
+          "name": "Tom Yum Thailand",
+          "price": 450000,
+          "picture": "/images/Soup Image/Rectangle 13-2.png"
+        },
+        {
+          "name": "Takoyaki Octopus",
+          "price": 150000,
+          "picture": "/images/Soup Image/Rectangle 12-11.png"
+        },
+        {
+          "name": "Jajangmeyon",
+          "price": 250000,
+          "picture": "/images/Soup Image/Rectangle 12-12.png"
+        },
+        {
+          "name": "Sate Padang",
+          "price": 300000,
+          "picture": "/images/Soup Image/Rectangle 12-13.png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "class": "Cold Drink",
+      "image": "/images/Soup Image/Rectangle 13.png",
+      "menu": [
+        {
+          "name": "Stawberry Float",
+          "price": 150000,
+          "picture": "/images/Soup Image/Rectangle 12-1.png"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "class": "Cookies",
+      "image": "/images/Soup Image/Rectangle 13-1.png",
+      "menu": [
+        {
+          "name": "Chocholate Cookies",
+          "price": 200000,
+          "picture": "/images/Soup Image/Rectangle 12-2.png"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "class": "Desert",
+      "image": "/images/Soup Image/Rectangle 12.png",
+      "menu": [
+        {
+          "name": "Green Tea Cheesecake",
+          "price": 400000,
+          "picture": "/images/Soup Image/Rectangle 12-3.png"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "class": "Eastern",
+      "image": "/images/Soup Image/Rectangle 16.png",
+      "menu": [
+        {
+          "name": "Nasi Kebuli",
+          "price": 400000,
+          "picture": "/images/Soup Image/Rectangle 16.png"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "class": "Hot Drink",
+      "image": "/images/Soup Image/Rectangle 14.png",
+      "menu": [
+        {
+          "name": "Caramel Frapucchino",
+          "price": 300000,
+          "picture": "/images/Soup Image/Rectangle 14.png"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "class": "Junk Food",
+      "image": "/images/Soup Image/Rectangle 15.png",
+      "menu": [
+        {
+          "name": "Pizza",
+          "price": 400000,
+          "picture": "/images/Soup Image/Rectangle 15.png"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "class": "Western",
+      "image": "/images/Soup Image/Rectangle 16-1.png",
+      "menu": [
+        {
+          "name": "Italian Spaghetti Bolognese",
+          "price": 450000,
+          "picture": "/images/Soup Image/Rectangle 12-5.png"
+        }
+      ]
+    }
+  ]
+}
