@@ -1,6 +1,6 @@
 This project also running with json-server, so run this code firts
 
-# npx json-server --watch db.json --port 8080 
+### npx json-server --watch db.json --port 8080 
 
 # Getting Started with Create React App
 
