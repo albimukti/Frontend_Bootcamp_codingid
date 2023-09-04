@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
 import { Grid, Typography, Button, Stack } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -16,7 +15,6 @@ const SuccessRegister = () => {
 
     return (
         <div>
-          
             <Grid sx={{mt:10}} container>
                 <Grid md={12}>
                     <Stack alignItems='center'>

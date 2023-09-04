@@ -10,10 +10,10 @@ const Header = () => {
           <Grid lg={3}></Grid>
           <Grid lg={6}>
             <Stack alignItems='center' textAlign={'center'} color={'white'}>
-              <Typography variant='h3' sx={{mt:9}}>
+              <Typography variant='h3' sx={{mt:{md:9,xs:6}}}>
                 Be the next great cheff
               </Typography>
-              <Typography sx={{mt:5, mb:10, fontSize: '1.3rem'}}>
+              <Typography sx={{mt:5, mb:10, fontSize:{md:'1.4rem',xs:'1.2rem'}}}>
                 We are able to awaken your cooking skills to become a classy chef and ready to dive into the professional world
               </Typography>
             </Stack>
