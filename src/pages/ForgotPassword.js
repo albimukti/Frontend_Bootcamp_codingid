@@ -24,6 +24,8 @@ const ForgotPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [invalid, setInvalid] = useState('hidden')
     const [passwordError, setPasswordError] = useState(',');
+    const [showPassword, setShowPassword] = useState(false); 
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
 
     const validateNewPassword = () => {
         if (newPassword.length > 16 || !/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
@@ -48,9 +50,18 @@ const ForgotPassword = () => {
             console.log('Password error:', passwordError);
         }
     };
+    const handlePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    const handleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
+    
 
     return (
         <div>
+          
             <Grid sx={{ mt: 10 }} container>
                 <Grid md={3} xs={1}></Grid>
                 <Grid md={6} xs={10}>
@@ -67,10 +78,20 @@ const ForgotPassword = () => {
                         id="outlined-new-password"
                         label="New Password"
                         variant="outlined"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         onBlur={validateNewPassword}
+                        InputProps={{
+                            endAdornment: (
+                                <Button
+                                    onClick={handlePasswordVisibility}
+                                    sx={{ p: 0 }}
+                                >
+                                    {showPassword ? 'Hide' : 'Show'}
+                                </Button>
+                            ),
+                        }}
                         />
                         <TextField
                         sx={{ mt: 3 }}
@@ -78,10 +99,20 @@ const ForgotPassword = () => {
                         id="outlined-confirm-password"
                         label="Confirm Password"
                         variant="outlined"
-                        type="password"
+                        type={showConfirmPassword ? 'text' : 'password'}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         onBlur={validateConfirmPassword}
+                        InputProps={{
+                            endAdornment: (
+                                <Button
+                                    onClick={handleConfirmPasswordVisibility}
+                                    sx={{ p: 0 }}
+                                >
+                                    {showConfirmPassword ? 'Hide' : 'Show'}
+                                </Button>
+                            ),
+                        }}
                         />
                         <Typography sx={{mt:1, color:'red', visibility:invalid}}>
                             {passwordError}
@@ -96,11 +127,16 @@ const ForgotPassword = () => {
                             </Link>
                         </ThemeProvider>
                         <ThemeProvider theme={secondary}>
+                            <Link to = '/login' >
                             <Box>
                                 <Button sx={{ mt:4, px: 4, borderRadius: 2 }}variant='contained' onClick={handleResetPassword}>
                                     Submit
                                 </Button>
                             </Box>
+
+                            </Link>
+                           
+                                
                         </ThemeProvider>
                     </Stack>
                 </Grid>

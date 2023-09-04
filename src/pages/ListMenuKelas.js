@@ -14,7 +14,7 @@ const ListMenuKelas = () => {
     useEffect(() => {
         window.scrollTo(0, 0)
         course()
-    }, [])
+    }, [id])
 
     //mengambil data list menu pada tiap-tiap kelas sesuai dengan id
     const course = async () => {
