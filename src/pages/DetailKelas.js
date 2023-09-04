@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+import { useParams, Link } from 'react-router-dom'
 import Footer from '../components/Footer'
-import { Box, Typography, Grid, Card, CardMedia, CardContent, Select, MenuItem, FormControl, InputLabel, Stack, Link, Button } from '@mui/material'
+import { Box, Typography, Grid, Card, CardMedia, CardContent, Select, MenuItem, FormControl, InputLabel, Stack, Button } from '@mui/material'
 import axios from 'axios'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -32,7 +31,7 @@ const DetailKelas = () => {
     useEffect(() => {
         window.scrollTo(0, 0)
         course()
-    }, [])
+    }, [menuId])
 
     //mengambil data list menu pada tiap-tiap kelas sesuai dengan id
     const course = async () => {
@@ -45,7 +44,6 @@ const DetailKelas = () => {
 
   return (
     <div>
-        <Navbar/>
         {kelas && 
         <Box>
             <Box sx={{pt:8, px:10}}>
@@ -55,13 +53,13 @@ const DetailKelas = () => {
                             <CardMedia component='img' image={kelas.menu[menuId - 1].picture}/>
                         </Card>
                     </Grid>
-                    <Grid xs={5} sx={{px:5}}>
+                    <Grid xs={12} md={5} sx={{px:{md:5, xs:0}, pt:{md:0, xs:3}}}>
                         <Typography>{kelas.class}</Typography>
                         <Typography sx={{pt:1, fontWeight:'bold'}} variant='h5'>{kelas.menu[menuId - 1].name}</Typography>
                         <Typography sx={{color:'#5B4947', pt:1, fontWeight:'bold'}} variant='h5'>
                             {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(kelas.menu[menuId - 1].price)}
                         </Typography>
-                        <FormControl sx={{width:'25rem', mt:4}}>
+                        <FormControl sx={{width:'18rem', mt:4}}>
                             <InputLabel id="demo-simple-select-label">Select Schedule</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
@@ -77,15 +75,15 @@ const DetailKelas = () => {
                                 <MenuItem value={60}>Saturday, 30 July 2022</MenuItem>
                             </Select>
                         </FormControl>
-                        <Stack direction='row' spacing={2} sx={{mt:8}}>
+                        <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
-                                <Link to='/login'>
+                                <Link to='/'>
                                     <Button sx={{px:5, borderRadius:2}} variant='outlined'>Add to Cart</Button>
                                 </Link>
                             </ThemeProvider>
                             <ThemeProvider theme={secondary}>
-                                <Link to='/register'>
-                                    <Button sx={{px:6, borderRadius:2, color:primary}} variant='contained'>Buy Now</Button>
+                                <Link to='/'>
+                                    <Button sx={{px:7, borderRadius:2, color:primary}} variant='contained'>Buy Now</Button>
                                 </Link>
                             </ThemeProvider>
                     </Stack>
@@ -94,8 +92,8 @@ const DetailKelas = () => {
             </Box>
             <Box sx={{ px:10, py:4, borderBottom:1, borderColor:'grey.400'}}>
                 <Typography variant='h4' sx={{fontWeight:'bold'}}>Description</Typography>
-                <Typography sx={{py:2}}>{kelas.description}</Typography>
-                <Typography sx={{py:2}}>{kelas.description}</Typography>
+                <Typography sx={{py:2, textAlign:'justify'}}>{kelas.description}</Typography>
+                <Typography sx={{py:2, textAlign:'justify'}}>{kelas.description}</Typography>
             </Box>
 
             <Box sx={{py:8, px:10}}>
@@ -106,16 +104,18 @@ const DetailKelas = () => {
                                 if(list.id !== parseInt(menuId)) 
                                 return(
                                 <Grid item lg={4} key={list.id}>
-                                    <Card>
-                                        <CardMedia component='img' image={list.picture}/>
-                                        <CardContent>
-                                            <Typography sx={{color:'gray'}}>{kelas.class}</Typography>
-                                            <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.name}</Typography>
-                                            <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
-                                                {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
+                                    <Link to={`/detail-kelas/${kelasId}/${list.id}`} style={{textDecoration: 'none'}}>
+                                        <Card>
+                                            <CardMedia component='img' image={list.picture}/>
+                                            <CardContent>
+                                                <Typography sx={{color:'gray'}}>{kelas.class}</Typography>
+                                                <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.name}</Typography>
+                                                <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
+                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>  
                                 </Grid>
                             )})}
                         </Grid>

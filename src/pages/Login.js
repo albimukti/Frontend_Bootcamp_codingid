@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
 import { Typography, TextField, Grid, Button, Stack } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -15,7 +14,6 @@ const Login = () => {
 
     return (
         <div>
-            <Navbar/>
             <Grid sx={{mt:{md:10, xs:7}}} container>
                 <Grid md={3} xs={1}></Grid>
                 <Grid md={6} xs={10}>

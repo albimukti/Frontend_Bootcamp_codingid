@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Navbar from '../components/Navbar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Grid, Typography, TextField, Stack, Button, Box, AlertTitle, Alert } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -39,7 +38,6 @@ const ResetPassword = () => {
 
     return (
         <div>
-            <Navbar/>
             <Grid sx={{mt:{md:7, xs:5}}} container>
                 <Grid md={3} xs={1}></Grid>
                 <Grid md={6} xs={10}>
