@@ -5,20 +5,21 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import EmailIcon from '@mui/icons-material/Email';
+import axios from 'axios';
 
 const Footer = () => {
     const [kelas, setKelas] = useState([])
-    const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
         course()
-    }, [kelas, loaded])
+    }, [])
 
     const course = async () => {
-       const response = await fetch('http://localhost:8080/course')
-       const data = await response.json()
-       setKelas(data)
-       setLoaded(true)
+        axios.get(`http://localhost:8080/course/`)
+        .then(res => setKelas(res.data))
+        .catch(error => {
+            console.error(error);
+        });
     }
     
     return (
@@ -35,7 +36,7 @@ const Footer = () => {
                     <Grid container>
                         <Grid item sm={6}>
                         <ul>
-                            {loaded && kelas.map((list, index) => {
+                            {kelas && kelas.map((list, index) => {
                                 if(index < 4) return (<li style={{color:'white', paddingBottom:10}}>{list.class}</li>)
                             })}
                             
@@ -43,7 +44,7 @@ const Footer = () => {
                         </Grid>
                         <Grid item sm={6}>
                         <ul>
-                            {loaded && kelas.map((list, index) => {
+                            {kelas && kelas.map((list, index) => {
                                 if(index >= 4) return (<li style={{color:'white', paddingBottom:10}}>{list.class}</li>)
                             })}
                             
