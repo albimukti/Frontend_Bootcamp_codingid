@@ -7,19 +7,28 @@ import Axios from 'axios'
 const ListMenuKelas = () => {
 
     //Untuk menampilkan list menu pada kelas
-    const [kelas, setKelas] = useState();
+    const [type, setType] = useState();
+    const [menu, setMenu] = useState();
 
-    const { id } = useParams()
+    const { typeName } = useParams()
 
     useEffect(() => {
         window.scrollTo(0, 0)
-        course()
-    }, [])
+        typeFood()
+        menuFood()
+    }, [typeName])
 
-    //mengambil data list menu pada tiap-tiap kelas sesuai dengan id
-    const course = async () => {
-        Axios.get(`http://localhost:8080/course/${id}`)
-        .then(res => setKelas(res.data))
+    const typeFood = async () => {
+        Axios.get(`https://localhost:7120/api/Type/GetTypeByName?name=${typeName}`)
+        .then(res => setType(res.data))
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+    const menuFood = async () => {
+        Axios.get(`https://localhost:7120/api/Menu/GetMenuByTypeName?type_name=${typeName}`)
+        .then(res => setMenu(res.data))
         .catch(error => {
             console.error(error);
         });
@@ -27,23 +36,23 @@ const ListMenuKelas = () => {
 
     return (
         <div>
-            {kelas && <Box sx={{backgroundImage: `url('${kelas.image}')`, backgroundSize:'cover', backgroundPosition:'center', height:'310px'}}></Box>}
-            {kelas && <Box sx={{py:6, px:10, borderBottom:1, borderColor:'grey.400'}}>
-                <Typography variant='h4' sx={{fontWeight:'bold'}}>{kelas.class}</Typography>
-                <Typography sx={{py:2, textAlign:'justify'}}>{kelas.description}</Typography>
+            {type && <Box sx={{backgroundImage: `url('${`data:image/png;base64,${type.image}`}')`, backgroundSize:'cover', backgroundPosition:'center', height:'310px'}}></Box>}
+            {type && <Box sx={{py:6, px:10, borderBottom:1, borderColor:'grey.400'}}>
+                <Typography variant='h4' sx={{fontWeight:'bold'}}>{type.type_name}</Typography>
+                <Typography sx={{py:2, textAlign:'justify'}}>{type.description}</Typography>
             </Box>}
             <Box sx={{py:8, px:10}}>
                 <Typography variant='h4' sx={{textAlign:'center', fontWeight:'bold', color:'#5B4947', pb:8}}>Another menu in this class</Typography>
                 <Box>
                     <Grid container spacing={5}>
-                        {kelas && kelas.menu.map((list) => (
+                        {menu && menu.map((list) => (
                             <Grid item lg={4} key={list.id}>
-                                <Link to={`/detail-kelas/${kelas.id}/${list.id}`} style={{textDecoration: 'none'}}>
+                                <Link to={`/detail-kelas/${type.type_name}/${list.title}`} style={{textDecoration: 'none'}}>
                                     <Card>
-                                        <CardMedia component='img' image={list.picture}/>
+                                        <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>
                                         <CardContent>
-                                            <Typography sx={{color:'gray'}}>{kelas.class}</Typography>
-                                            <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.name}</Typography>
+                                            <Typography sx={{color:'gray'}}>{type.type_name}</Typography>
+                                            <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.title}</Typography>
                                             <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
                                                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
                                             </Typography>

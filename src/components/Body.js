@@ -22,17 +22,25 @@ const secondary = createTheme({
 
 const Body = () => {
 
-    //Untuk menampilkan list kelas
-    const [kelas, setKelas] = useState()
+    const [limit, setLimit] = useState()
+    const [type, setType] = useState()
 
     useEffect(() => {
-        course()
+        limitMenu()
+        typeFood()
     }, [])
 
-    //mengambil data dari kelas dengan menggunakan data json-server
-    const course = async () => {
-        axios.get(`http://localhost:8080/course/`)
-        .then(res => setKelas(res.data))
+    const limitMenu = async () => {
+        axios.get(`https://localhost:7120/api/Menu/GetMenuLimit`)
+        .then(res => setLimit(res.data))
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+    const typeFood = () => {
+        axios.get(`https://localhost:7120/api/Type`)
+        .then(res => setType(res.data))
         .catch(error => {
             console.error(error);
         });
@@ -40,7 +48,7 @@ const Body = () => {
 
     return (
         <div>
-            <Grid container columnSpacing={10} rowSpacing={5} sx={{mt:{md:7, xs:2}, px:{md:20, xs:10}}}>
+            <Grid container columnSpacing={8} rowSpacing={4} sx={{mt:{md:7, xs:2}, px:{md:20, xs:10}}}>
                 <Grid item lg={4} xs={12}>
                     <Card sx={{border:1, borderColor:'grey.400', borderRadius:3}}>
                         <CardContent sx={{display:'flex', flexDirection:'column', alignItems:'center'}}>
@@ -88,25 +96,23 @@ const Body = () => {
             </Box>
             <Box sx={{px:10, py:6}}>
                 <Grid container spacing={5}>
-                    {kelas && kelas.map((list, index) => {
-                        if(index < 6)
-                        return (
-                            <Grid item md={4} xs={12}  key={list.id}>
-                                <Link to={`/detail-kelas/${list.id}/${list.menu[0].id}`} style={{textDecoration: 'none'}}>
+                    {limit && limit.map((list, index) => (
+                            <Grid item md={4} xs={12}  key={index}>
+                                <Link to={`/detail-kelas/${list.type_name}/${list.title}`} style={{textDecoration: 'none'}}>
                                     <Card>
-                                        <CardMedia component='img' image={list.menu[0].picture}/>
+                                        <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>
                                         <CardContent>
-                                            <Typography sx={{color:'gray'}}>{list.class}</Typography>
-                                            <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.menu[0].name}</Typography>
+                                            <Typography sx={{color:'gray'}}>{list.type_name}</Typography>
+                                            <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.title}</Typography>
                                             <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
-                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.menu[0].price)}
+                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
                                             </Typography>
                                         </CardContent>
                                     </Card>
                                 </Link>
                             </Grid>
                         )
-                    })}  
+                    )}  
                 </Grid>
             </Box>
             <Box sx={{backgroundImage: "url('/images/Soup Image/image 4.png')", backgroundSize:'cover', backgroundPosition:'center'}}>
@@ -121,14 +127,14 @@ const Body = () => {
             </Box>
             <Box sx={{p:10}}>
                 <Grid container spacing={5}>
-                    {kelas && kelas.map((list) => (
-                        <Grid item lg={3} md={4} sm={6} xs={12} key={list.id}>
-                            <Link to={`/list-menu-kelas/${list.id}`} style={{textDecoration: 'none'}}>
+                    {type && type.map((list) => (
+                        <Grid item lg={3} md={4} sm={6} xs={12} key={list.id_type}>
+                            <Link to={`/list-menu-kelas/${list.type_name}`} style={{textDecoration: 'none'}}>
                                 <Card>
-                                    <CardMedia component='img' image={list.image}/>
-                                        <CardContent>
-                                            <Typography sx={{color:'black', textAlign:'center', fontWeight:'bold'}}>{list.class}</Typography>
-                                        </CardContent>
+                                    <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>
+                                    <CardContent>
+                                        <Typography sx={{color:'black', textAlign:'center', fontWeight:'bold'}}>{list.type_name}</Typography>
+                                    </CardContent>
                                 </Card>
                             </Link>   
                         </Grid>

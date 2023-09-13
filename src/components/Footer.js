@@ -6,6 +6,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import EmailIcon from '@mui/icons-material/Email';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     const [kelas, setKelas] = useState([])
@@ -15,8 +16,8 @@ const Footer = () => {
     }, [])
 
     const course = async () => {
-        axios.get(`http://localhost:8080/course/`)
-        .then(res => setKelas(res.data))
+        axios.get(`https://localhost:7120/api/Type/`)
+        .then(response => setKelas(response.data))
         .catch(error => {
             console.error(error);
         });
@@ -37,7 +38,11 @@ const Footer = () => {
                         <Grid item sm={6}>
                         <ul>
                             {kelas && kelas.map((list, index) => {
-                                if(index < 4) return (<li style={{color:'white', paddingBottom:10}}>{list.class}</li>)
+                                if(index < 4) return (
+                                    <Link to = {`/list-menu-kelas/${list.type_name}`} style={{textDecoration:'none'}}>
+                                        <li style={{color:'white', paddingBottom:10}}>{list.type_name}</li>
+                                    </Link>
+                                )
                             })}
                             
                         </ul>
@@ -45,7 +50,11 @@ const Footer = () => {
                         <Grid item sm={6}>
                         <ul>
                             {kelas && kelas.map((list, index) => {
-                                if(index >= 4) return (<li style={{color:'white', paddingBottom:10}}>{list.class}</li>)
+                                if(index >= 4) return (
+                                    <Link to = {`/list-menu-kelas/${list.type_name}`} style={{textDecoration:'none'}}>
+                                        <li style={{color:'white', paddingBottom:10}}>{list.type_name}</li>
+                                    </Link>
+                                )
                             })}
                             
                         </ul>
