@@ -31,7 +31,7 @@ function App() {
           <Route path = "/checkout" element = {<Checkout/>} />
           <Route path = "/success-purchase" element = {<SuccessPurchase/>} />
           <Route path = "/invoice" element = {<Invoice/>} />
-          <Route path = "/detail-invoice" element = {<DetailInvoice/>} />
+          <Route path = "/detail-invoice/:invoice" element = {<DetailInvoice/>} />
           <Route path = "/myclass" element = {<MyClass/>} />
         </Route>
         

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import { Box, Typography, Grid, Card, CardMedia, CardContent, Select, MenuItem, FormControl, InputLabel, Stack, Button } from '@mui/material'
 import axios from 'axios'
@@ -28,6 +28,7 @@ const DetailKelas = () => {
     const [schedule, setSchedule] = useState('')
 
     const { typeName, title} = useParams()
+    const navigate = useNavigate()
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -35,7 +36,6 @@ const DetailKelas = () => {
         menuFood()
     }, [title])
 
-    //mengambil data list menu pada tiap-tiap kelas sesuai dengan id
     const course = async () => {
         axios.get(`https://localhost:7120/api/Menu/GetMenuByTitle?title=${title}`)
         .then(res => setKelas(res.data))
@@ -54,6 +54,18 @@ const DetailKelas = () => {
 
     const handleSelect = (event) => {
         setSchedule(event.target.value)
+    }
+
+    const addCart = (schedule, id_user, id_menu) => {
+        axios.post(`https://localhost:7120/api/Cart/AddCart`, {
+            schedule : schedule,
+            fk_id_user : id_user,
+            fk_id_menu : id_menu
+        })
+        .then(res => {console.log('Sukses:', res.data)})
+        .catch(error => {
+            console.error(error);
+        });
     }
 
   return (
@@ -82,19 +94,18 @@ const DetailKelas = () => {
                                 label="Select Schedule"
                                 onChange={handleSelect}
                             >
-                                <MenuItem value={'Monday, 25 July 2022'}>Monday, 25 July 2022</MenuItem>
-                                <MenuItem value={'Tuesday, 26 July 2022'}>Tuesday, 26 July 2022</MenuItem>
-                                <MenuItem value={'Wednesday, 27 July 2022'}>Wednesday, 27 July 2022</MenuItem>
-                                <MenuItem value={'Thursday, 28 July 2022'}>Thursday, 28 July 2022</MenuItem>
-                                <MenuItem value={'Friday, 29 July 2022'}>Friday, 29 July 2022</MenuItem>
-                                <MenuItem value={'Saturday, 30 July 2022'}>Saturday, 30 July 2022</MenuItem>
+                                <MenuItem value={'2022-07-25'}>Monday, 25 July 2022</MenuItem>
+                                <MenuItem value={'2022-07-26'}>Tuesday, 26 July 2022</MenuItem>
+                                <MenuItem value={'2022-07-27'}>Wednesday, 27 July 2022</MenuItem>
+                                <MenuItem value={'2022-07-28'}>Thursday, 28 July 2022</MenuItem>
+                                <MenuItem value={'2022-07-29'}>Friday, 29 July 2022</MenuItem>
+                                <MenuItem value={'2022-07-30'}>Saturday, 30 July 2022</MenuItem>
                             </Select>
                         </FormControl>
+                        <Typography>{schedule}</Typography>
                         <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
-                                <Link to='/'>
-                                    <Button sx={{px:5, borderRadius:2}} variant='outlined'>Add to Cart</Button>
-                                </Link>
+                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, 'd4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9', kelas.id_menu)}>Add to Cart</Button>
                             </ThemeProvider>
                             <ThemeProvider theme={secondary}>
                                 <Link to='/checkout'>

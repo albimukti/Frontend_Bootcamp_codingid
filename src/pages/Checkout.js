@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -6,6 +6,7 @@ import { Stack, Typography, Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PaymentMethod from '../components/PaymentMethod';
+import axios from 'axios';
 
 const primary = createTheme({
     palette: {
@@ -24,56 +25,156 @@ const secondary = createTheme({
   });
 
 const Checkout = () => {
-    const [checked, setChecked] = useState([false, false]);
+    const [cart, setCart] = useState([])
+    const [checkedState, setCheckedState] = useState([]);
+    const [isItemDeleted, setIsItemDeleted] = useState(false);
+    const [totalPrice, settotalPrice] = useState(0)
+    const [course, setCourse] = useState(0)
+    const [dataOrder, setDataOrder] = useState([])
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
+    useEffect(() => {
+        cartView()
+    },[isItemDeleted])
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
+    const cartView = async () => {
+        axios.get(`https://localhost:7120/api/Cart/GetCartByIdUser?id_user=d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9`)
+        .then(res => {
+            setCart(res.data)
+            setCheckedState(new Array(res.data.length).fill(false));
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
 
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
+    const deleteCart = (id_cart) => {
+        axios.delete(`https://localhost:7120/api/Cart/DeleteCart?id_cart=${id_cart}`)
+        .then(res => {
+            console.log('Delete Successful:', res.data)
+            settotalPrice(0)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+        setIsItemDeleted(true);        
+    }
+
+    const handleOnChange = (event, position) => {
+        const isChecked = event.target.checked;
+      
+        // Perbarui checkedState berdasarkan position
+        const updatedCheckedState = checkedState.map((item, index) =>
+            index === position ? isChecked : item
+        );
+        setCheckedState(updatedCheckedState);
+      
+        // Perbarui dataOrder berdasarkan checkedState
+        const newDataOrder = cart.filter((_, index) => updatedCheckedState[index]);
+        setDataOrder(newDataOrder);
+      
+        // Hitung totalPrice dan totalCourse berdasarkan newDataOrder
+        const finalPrice = newDataOrder.reduce(
+            (sum, item) => sum + item.price,
+            0
+        );
+        settotalPrice(finalPrice);
+      
+        const totalCourse = newDataOrder.length;
+        setCourse(totalCourse);
     };
+      
+      const handleAll = () => {
+        const selectAll = checkedState.map(() => true);
+        setCheckedState(selectAll);
+      
+        // Perbarui dataOrder berdasarkan cart
+        setDataOrder(cart);
+      
+        // Hitung totalPrice dan totalCourse berdasarkan cart
+        const finalPrice = cart.reduce(
+            (sum, item) => sum + item.price,
+            0
+        );
+        settotalPrice(finalPrice);
+      
+        const totalCourse = cart.length;
+        setCourse(totalCourse);
+    };
+      
+
+    const dateConvert = (date) => {
+
+        // Parse tanggal dengan format yang diberikan
+        var parts = date.split(/[\s/:]+/);
+        var tanggalObjek = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0], parts[3], parts[4], parts[5]));
+
+        // Daftar nama hari dalam bahasa Inggris
+        var namaHari = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+        ];
+
+        // Daftar nama bulan dalam bahasa Inggris
+        var namaBulan = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+        ];
+
+        // Ambil informasi tanggal, bulan, hari, dan tahun
+        var hari = namaHari[tanggalObjek.getUTCDay()];
+        var tanggal = tanggalObjek.getUTCDate();
+        var bulan = namaBulan[tanggalObjek.getUTCMonth()];
+        var tahun = tanggalObjek.getUTCFullYear();
+
+        // Buat string hasil dengan format yang diinginkan
+        var hasil = hari + ", " + tanggal + " " + bulan + " " + tahun;
+
+        // Tampilkan hasil
+        return hasil;
+
+    }
 
     const children = (
         <Box sx={{ display: 'flex', flexDirection: 'column'}}>
-            <Box sx={{borderBottom:3, borderColor:'grey.300', py:2, display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
+            {cart && cart.map((list, index) => (
+                <Box sx={{borderBottom:3, borderColor:'grey.300', py:2, display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
                 <Stack direction={{sm:'row', xs:'column'}}>
                     <Stack direction='row'>
                         <FormControlLabel
-                            control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
+                            control={<Checkbox checked={checkedState[index]} onChange={(event) => handleOnChange(event, index)} />}
                         />
-                        <Box component='img' sx={{height:'140px'}} src='/images/Soup Image/Rectangle 13-2.png'/>
+                        <Box component='img' sx={{height:'140px'}} src={`data:image/png;base64,${list.image}`}/>
                     </Stack>
                     <Box sx={{px:{sm:3, xs:6}}}>
-                        <Typography sx={{pb:1, mt:{sm:0, xs:2}}}>Asian</Typography>
-                        <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>Tom Yum Thailand</Typography>
-                        <Typography sx={{pb:1}}>Schedule : Wednesday, 27 July 2022</Typography>
-                        <Typography variant='h6' sx={{color:secondary.palette.primary.main, pb:1, fontWeight:'bold'}}>IDR 450.000</Typography>
+                        <Typography sx={{pb:1, mt:{sm:0, xs:2}}}>{list.type_name}</Typography>
+                        <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>{list.title}</Typography>
+                        <Typography sx={{pb:1}}>Schedule : {dateConvert(list.schedule)}</Typography>
+                        <Typography variant='h6' sx={{color:secondary.palette.primary.main, pb:1, fontWeight:'bold'}}>
+                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
+                        </Typography>
                     </Box>
                 </Stack>
-                <DeleteForeverIcon fontSize='large' sx={{color:'red'}}/>
+                <Button onClick={() => deleteCart(list.id_cart)}>
+                    <DeleteForeverIcon fontSize='large' sx={{color:'red'}}/>
+                </Button>
             </Box>
-            <Box sx={{borderBottom:3, borderColor:'grey.300', py:2, display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
-                <Stack direction={{sm:'row', xs:'column'}}>
-                    <Stack direction='row'>
-                        <FormControlLabel
-                            control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-                        />
-                        <Box component='img' sx={{height:'140px'}} src='/images/Soup Image/Rectangle 12-7.png'/>
-                    </Stack>
-                    <Box sx={{px:{sm:3, xs:6}}}>
-                        <Typography sx={{pb:1, mt:{sm:0, xs:2}}}>Asian</Typography>
-                        <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>Ichiraku Ramen</Typography>
-                        <Typography sx={{pb:1}}>Schedule : Sunday, 24 July 2022</Typography>
-                        <Typography variant='h6' sx={{color:secondary.palette.primary.main, pb:1, fontWeight:'bold'}}>IDR 300.000</Typography>
-                    </Box>
-                </Stack>
-                <DeleteForeverIcon fontSize='large' sx={{color:'red'}}/>
-            </Box>
+            ))}
         </Box>
     );
 
@@ -91,15 +192,19 @@ const Checkout = () => {
 
     return (
         <div style={{position:'relative'}}>
+            <Box>
+                {dataOrder && dataOrder.map((item) => (
+                    <Typography>{item.id_menu}</Typography>
+                ))}
+            </Box>
             <Box sx={{pt:4, px:{sm:10, xs:5}, mb:15}}>
                 <Box sx={{borderBottom:3, borderColor:'grey.300', py:1}}>
                     <FormControlLabel
                         label="Pilih Semua"
                         control={
                         <Checkbox
-                            checked={checked[0] && checked[1]}
-                            indeterminate={checked[0] !== checked[1]}
-                            onChange={handleChange1}
+                            checked={checkedState.every(value => value === true)}
+                            onChange={handleAll}
                         />
                         }
                     />
@@ -110,7 +215,10 @@ const Checkout = () => {
             bottom:0, py:3, px:{sm:10, xs:5}, display:'flex', justifyContent: 'space-between', borderTop:3, borderColor:'grey.300', backgroundColor:'white'}}>
                 <Stack direction='row' spacing={3}>
                     <Typography sx={{fontSize:{sm:'1.2rem', xs:'1.1rem'}, pt:1}}>Total Price</Typography>
-                    <Typography sx={{color:'#FABC1D', fontWeight:'bold', fontSize:{sm:'1.2rem', xs:'1.1rem'}, pt:1}}>IDR 11.500.000</Typography>
+                    <Typography sx={{color:'#FABC1D', fontWeight:'bold', fontSize:{sm:'1.2rem', xs:'1.1rem'}, pt:1}}>
+                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalPrice)}
+                    </Typography>
+                    <Typography>{dataOrder.length}</Typography>
                 </Stack>
                 <Box>
                     <ThemeProvider theme={secondary}>
@@ -119,9 +227,12 @@ const Checkout = () => {
                 </Box>
             </Box>
             <PaymentMethod
-                selectedValue={selectedValue}
-                open={open}
-                onClose={handleClose}
+                selectedValue = {selectedValue}
+                open = {open}
+                onClose = {handleClose}
+                totalPrice = {totalPrice}
+                totalCourse = {course}
+                orderDetail = {dataOrder}
             />
         </div>
     )
