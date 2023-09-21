@@ -29,6 +29,7 @@ const DetailKelas = () => {
 
     const { typeName, title} = useParams()
     const navigate = useNavigate()
+    const id_user = "d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9"
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -37,7 +38,7 @@ const DetailKelas = () => {
     }, [title])
 
     const course = async () => {
-        axios.get(`https://localhost:7120/api/Menu/GetMenuByTitle?title=${title}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTitle?title=${title}`)
         .then(res => setKelas(res.data))
         .catch(error => {
             console.error(error);
@@ -45,7 +46,7 @@ const DetailKelas = () => {
     }
 
     const menuFood = async () => {
-        axios.get(`https://localhost:7120/api/Menu/GetMenuByTypeName?type_name=${typeName}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTypeName?type_name=${typeName}`)
         .then(res => setMenu(res.data))
         .catch(error => {
             console.error(error);
@@ -57,7 +58,7 @@ const DetailKelas = () => {
     }
 
     const addCart = (schedule, id_user, id_menu) => {
-        axios.post(`https://localhost:7120/api/Cart/AddCart`, {
+        axios.post(`${process.env.REACT_APP_API_URL}/Cart/AddCart`, {
             schedule : schedule,
             fk_id_user : id_user,
             fk_id_menu : id_menu
@@ -74,12 +75,12 @@ const DetailKelas = () => {
         {kelas && 
             <Box sx={{pt:8, px:10}}>
                 <Grid container>
-                    <Grid xs={12} md={4}>
+                    <Grid item xs={12} md={4}>
                         <Card>
                             <CardMedia component='img' image={`data:image/png;base64,${kelas.image}`}/>
                         </Card>
                     </Grid>
-                    <Grid xs={12} md={5} sx={{px:{md:5, xs:0}, pt:{md:0, xs:3}}}>
+                    <Grid item xs={12} md={5} sx={{px:{md:5, xs:0}, pt:{md:0, xs:3}}}>
                         <Typography>{kelas.type_name}</Typography>
                         <Typography sx={{pt:1, fontWeight:'bold'}} variant='h5'>{kelas.title}</Typography>
                         <Typography sx={{color:'#5B4947', pt:1, fontWeight:'bold'}} variant='h5'>
@@ -105,7 +106,7 @@ const DetailKelas = () => {
                         <Typography>{schedule}</Typography>
                         <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
-                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, 'd4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9', kelas.id_menu)}>Add to Cart</Button>
+                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, id_user, kelas.id_menu)}>Add to Cart</Button>
                             </ThemeProvider>
                             <ThemeProvider theme={secondary}>
                                 <Link to='/checkout'>
@@ -129,22 +130,24 @@ const DetailKelas = () => {
                         <Grid container spacing={5}>
                             {menu && menu.map((list) => {
                                 if(list.title !== kelas.title) 
-                                return(
-                                <Grid item lg={4} key={list.id}>
-                                    <Link to={`/detail-kelas/${kelas.type_name}/${list.title}`} style={{textDecoration: 'none'}}>
-                                        <Card>
-                                            <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>
-                                            <CardContent>
-                                                <Typography sx={{color:'gray'}}>{kelas.type_name}</Typography>
-                                                <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.title}</Typography>
-                                                <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
-                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
-                                                </Typography>
-                                            </CardContent>
-                                        </Card>
-                                    </Link>  
-                                </Grid>
-                            )})}
+                                    return(
+                                    <Grid item lg={4} key={list.id_menu}>
+                                        <Link to={`/detail-kelas/${kelas.type_name}/${list.title}`} style={{textDecoration: 'none'}}>
+                                            <Card>
+                                                <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>
+                                                <CardContent>
+                                                    <Typography sx={{color:'gray'}}>{kelas.type_name}</Typography>
+                                                    <Typography sx={{color:'#5B4947', fontWeight:'bold'}} variant='h5'>{list.title}</Typography>
+                                                    <Typography sx={{color:'#FABC1D', mt:4, fontWeight:'bold'}} variant='h5'>
+                                                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
+                                                    </Typography>
+                                                </CardContent>
+                                            </Card>
+                                        </Link>  
+                                    </Grid>
+                                    )
+                                else return null
+                            })}
                         </Grid>
                     </Box>
                 </Box>

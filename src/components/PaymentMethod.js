@@ -9,6 +9,7 @@ import { Box, DialogActions, Stack, Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PropTypes from 'prop-types'
 
 const primary = createTheme({
     palette: {
@@ -39,7 +40,6 @@ const PaymentMethod = (props) => {
   const { onClose, selectedValue, open, totalPrice, totalCourse, orderDetail } = props;
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const id_user = 'd4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9'
-  const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
 
   const handleClose = () => {
@@ -76,7 +76,7 @@ const PaymentMethod = (props) => {
 
     let dataOrder
 
-    await axios.post('https://localhost:7120/api/Order/CreateOrder', createOrder)
+    await axios.post(process.env.REACT_APP_API_URL + '/Order/CreateOrder', createOrder)
     .then(res => {
       dataOrder = orderDetail.map((item) => ({
         id_detail: 0,
@@ -88,7 +88,7 @@ const PaymentMethod = (props) => {
     .catch(error => console.log(error))
 
     const axiosPromises = dataOrder && dataOrder.map((item) => {
-      return axios.post('https://localhost:7120/api/OrderDetail/AddOrderDetail', item, {
+      return axios.post(process.env.REACT_APP_API_URL + '/OrderDetail/AddOrderDetail', item, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -106,12 +106,11 @@ const PaymentMethod = (props) => {
     }
 
     orderDetail.forEach((item) => {
-      axios.delete(`https://localhost:7120/api/Cart/DeleteCart?id_cart=${item.id_cart}`)
+      axios.delete(process.env.REACT_APP_API_URL + `/Cart/DeleteCart?id_cart=${item.id_cart}`)
       .then(res => console.log(res.status))
       .catch(error => {
           console.error(error);
       })
-      .finally(setSuccess(true))
     })
     
     navigate('/success-purchase')
@@ -142,6 +141,15 @@ const PaymentMethod = (props) => {
       </DialogActions>
     </Dialog>
   );
+}
+
+PaymentMethod.propTypes = {
+  onClose: PropTypes.func, 
+  selectedValue: PropTypes.func, 
+  open: PropTypes.bool, 
+  totalPrice: PropTypes.number.isRequired, 
+  totalCourse: PropTypes.number.isRequired, 
+  orderDetail: PropTypes.array.isRequired
 }
 
 export default PaymentMethod

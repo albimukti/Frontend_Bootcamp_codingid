@@ -42,13 +42,13 @@ const DetailInvoice = () => {
   }, [])
 
   const getDataOrder = () => {
-    axios.get(`https://localhost:7120/api/Order/GetOrderById?id_order=${invoiceNumber}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrderById?id_order=${invoiceNumber}`)
     .then(res => setDataOrder(res.data))
     .catch(error => console.log(error))
   }
 
   const getDataInvoice = () => {
-    axios.get(`https://localhost:7120/api/OrderDetail/GetDetailOrder?id_order=${invoiceNumber}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/OrderDetail/GetDetailOrder?id_order=${invoiceNumber}`)
     .then(res => {
       setDataInvoice(res.data);
     })
@@ -176,7 +176,7 @@ const DetailInvoice = () => {
                         </TableHead>
                         <TableBody>
                             {dataInvoice.map((row, index) => (
-                              <StyledTableRow>
+                              <StyledTableRow key={index}>
                                 <StyledTableCell align="center">{index + 1}</StyledTableCell>
                                 <StyledTableCell align="center">{row.title}</StyledTableCell>
                                 <StyledTableCell align="center">{row.type_name}</StyledTableCell>

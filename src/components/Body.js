@@ -4,14 +4,6 @@ import { createTheme } from '@mui/material/styles';
 import { Link } from "react-router-dom"
 import axios from 'axios';
 
-const primary = createTheme({
-    palette: {
-      primary: {
-        main: '#5B4947'
-      },
-    },
-  });
-
 const secondary = createTheme({
     palette: {
       primary: {
@@ -30,8 +22,8 @@ const Body = () => {
         typeFood()
     }, [])
 
-    const limitMenu = async () => {
-        axios.get(`https://localhost:7120/api/Menu/GetMenuLimit`)
+    const limitMenu = () => {
+        axios.get(process.env.REACT_APP_API_URL + '/Menu/GetMenuLimit')
         .then(res => setLimit(res.data))
         .catch(error => {
             console.error(error);
@@ -39,7 +31,7 @@ const Body = () => {
     }
 
     const typeFood = () => {
-        axios.get(`https://localhost:7120/api/Type`)
+        axios.get(process.env.REACT_APP_API_URL + '/Type')
         .then(res => setType(res.data))
         .catch(error => {
             console.error(error);
@@ -97,7 +89,7 @@ const Body = () => {
             <Box sx={{px:10, py:6}}>
                 <Grid container spacing={5}>
                     {limit && limit.map((list, index) => (
-                            <Grid item md={4} xs={12}  key={index}>
+                            <Grid item md={4} xs={12} key={index}>
                                 <Link to={`/detail-kelas/${list.type_name}/${list.title}`} style={{textDecoration: 'none'}}>
                                     <Card>
                                         <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>

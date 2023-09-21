@@ -19,7 +19,7 @@ const ListMenuKelas = () => {
     }, [typeName])
 
     const typeFood = async () => {
-        Axios.get(`https://localhost:7120/api/Type/GetTypeByName?name=${typeName}`)
+        Axios.get(`${process.env.REACT_APP_API_URL}/Type/GetTypeByName?name=${typeName}`)
         .then(res => setType(res.data))
         .catch(error => {
             console.error(error);
@@ -27,7 +27,7 @@ const ListMenuKelas = () => {
     }
 
     const menuFood = async () => {
-        Axios.get(`https://localhost:7120/api/Menu/GetMenuByTypeName?type_name=${typeName}`)
+        Axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTypeName?type_name=${typeName}`)
         .then(res => setMenu(res.data))
         .catch(error => {
             console.error(error);
@@ -46,7 +46,7 @@ const ListMenuKelas = () => {
                 <Box>
                     <Grid container spacing={5}>
                         {menu && menu.map((list) => (
-                            <Grid item lg={4} key={list.id}>
+                            <Grid item lg={4} key={list.id_menu}>
                                 <Link to={`/detail-kelas/${type.type_name}/${list.title}`} style={{textDecoration: 'none'}}>
                                     <Card>
                                         <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>

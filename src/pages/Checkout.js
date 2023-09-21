@@ -31,13 +31,14 @@ const Checkout = () => {
     const [totalPrice, settotalPrice] = useState(0)
     const [course, setCourse] = useState(0)
     const [dataOrder, setDataOrder] = useState([])
+    const id_User = "d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9"
 
     useEffect(() => {
         cartView()
     },[isItemDeleted])
 
     const cartView = async () => {
-        axios.get(`https://localhost:7120/api/Cart/GetCartByIdUser?id_user=d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9`)
+        axios.get(process.env.REACT_APP_API_URL + `/Cart/GetCartByIdUser?id_user=${id_User}`)
         .then(res => {
             setCart(res.data)
             setCheckedState(new Array(res.data.length).fill(false));
@@ -48,7 +49,7 @@ const Checkout = () => {
     }
 
     const deleteCart = (id_cart) => {
-        axios.delete(`https://localhost:7120/api/Cart/DeleteCart?id_cart=${id_cart}`)
+        axios.delete(process.env.REACT_APP_API_URL + `/Cart/DeleteCart?id_cart=${id_cart}`)
         .then(res => {
             console.log('Delete Successful:', res.data)
             settotalPrice(0)
@@ -153,27 +154,27 @@ const Checkout = () => {
     const children = (
         <Box sx={{ display: 'flex', flexDirection: 'column'}}>
             {cart && cart.map((list, index) => (
-                <Box sx={{borderBottom:3, borderColor:'grey.300', py:2, display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
-                <Stack direction={{sm:'row', xs:'column'}}>
-                    <Stack direction='row'>
-                        <FormControlLabel
-                            control={<Checkbox checked={checkedState[index]} onChange={(event) => handleOnChange(event, index)} />}
-                        />
-                        <Box component='img' sx={{height:'140px'}} src={`data:image/png;base64,${list.image}`}/>
+                <Box key={index} sx={{borderBottom:3, borderColor:'grey.300', py:2, display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
+                    <Stack direction={{sm:'row', xs:'column'}}>
+                        <Stack direction='row'>
+                            <FormControlLabel
+                                control={<Checkbox checked={checkedState[index]} onChange={(event) => handleOnChange(event, index)} />}
+                            />
+                            <Box component='img' sx={{height:'140px'}} src={`data:image/png;base64,${list.image}`}/>
+                        </Stack>
+                        <Box sx={{px:{sm:3, xs:6}}}>
+                            <Typography sx={{pb:1, mt:{sm:0, xs:2}}}>{list.type_name}</Typography>
+                            <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>{list.title}</Typography>
+                            <Typography sx={{pb:1}}>Schedule : {dateConvert(list.schedule)}</Typography>
+                            <Typography variant='h6' sx={{color:secondary.palette.primary.main, pb:1, fontWeight:'bold'}}>
+                                {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
+                            </Typography>
+                        </Box>
                     </Stack>
-                    <Box sx={{px:{sm:3, xs:6}}}>
-                        <Typography sx={{pb:1, mt:{sm:0, xs:2}}}>{list.type_name}</Typography>
-                        <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>{list.title}</Typography>
-                        <Typography sx={{pb:1}}>Schedule : {dateConvert(list.schedule)}</Typography>
-                        <Typography variant='h6' sx={{color:secondary.palette.primary.main, pb:1, fontWeight:'bold'}}>
-                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
-                        </Typography>
-                    </Box>
-                </Stack>
-                <Button onClick={() => deleteCart(list.id_cart)}>
-                    <DeleteForeverIcon fontSize='large' sx={{color:'red'}}/>
-                </Button>
-            </Box>
+                    <Button onClick={() => deleteCart(list.id_cart)}>
+                        <DeleteForeverIcon fontSize='large' sx={{color:'red'}}/>
+                    </Button>
+                </Box>
             ))}
         </Box>
     );

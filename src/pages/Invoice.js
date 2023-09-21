@@ -55,14 +55,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   
 const Invoice = () => {
   const [dataOrder, setDataOrder] = useState([])
+  const id_User = "d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9"
 
   useEffect(() => {
     getInvoiceByIdUser()
-    console.log(dataOrder);
   }, [])
 
   const getInvoiceByIdUser = () => {
-    axios.get(`https://localhost:7120/api/Order/GetOrdersByIdUser?id_user=d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9`)
+    axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrdersByIdUser?id_user=${id_User}`)
     .then(res => {
       setDataOrder(res.data);
     })

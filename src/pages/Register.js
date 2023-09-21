@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Typography, TextField, Grid, Button, Stack, Alert } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const secondary = createTheme({
     palette: {
@@ -35,16 +36,24 @@ const Register = () => {
             setErrorMessage('Password did not match')
             setActiveError(true)
         } else {
-            //navigasi ke halaman success register setelah melalui validasi form input
-            navigate('/success-register')
+            handleRegister()
         }
+    }
+
+    const handleRegister = () => {
+        axios.post(process.env.REACT_APP_API_URL + '/User/CreateUser', {
+            name: nama,
+            email: email,
+            password: password
+        })
+        navigate('/success-register')
     }
 
     return (
         <div>
             <Grid sx={{mt:{md:10, xs:7}}} container>
-                <Grid md={3} xs={1}></Grid>
-                <Grid md={6} xs={10}>
+                <Grid item md={3} xs={1}></Grid>
+                <Grid item md={6} xs={10}>
                     <Typography variant='h5'>
                         Are you ready to become a professional cheff?
                     </Typography>
@@ -52,9 +61,9 @@ const Register = () => {
                         Please register first
                     </Typography>
                     <form>
-                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Name" variant="outlined" type='text' value={nama} 
+                        <TextField sx={{mt:3}} fullWidth id="outlined-name-input" label="Name" variant="outlined" type='text' value={nama} 
                         onChange={(e) => setNama(e.target.value)}/>
-                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' value={email}
+                        <TextField sx={{mt:3}} fullWidth id="outlined-email-input" label="Email" variant="outlined" type='email' value={email}
                         onChange={(e) => setEmail(e.target.value)} />
                         <TextField sx={{mt:3}} fullWidth id="outlined-password-input" label="Password" type="password" variant="outlined"
                         onChange={(e) => setPassword(e.target.value)}/>
