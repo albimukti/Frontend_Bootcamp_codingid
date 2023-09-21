@@ -13,6 +13,7 @@ import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Footer from '../components/Footer';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
 
 const secondary = createTheme({
     palette: {
@@ -55,14 +56,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   
 const Invoice = () => {
   const [dataOrder, setDataOrder] = useState([])
-  const id_User = "d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9"
+  const { payload } = useAuth()
+  axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
 
   useEffect(() => {
     getInvoiceByIdUser()
   }, [])
 
   const getInvoiceByIdUser = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrdersByIdUser?id_user=${id_User}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrdersByIdUser`)
     .then(res => {
       setDataOrder(res.data);
     })

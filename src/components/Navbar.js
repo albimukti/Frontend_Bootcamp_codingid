@@ -5,6 +5,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import useAuth from '../hooks/useAuth';
 
 const whiteTheme = createTheme({
   palette: {
@@ -31,6 +32,8 @@ const secondary = createTheme({
 });
 
 const Navbar = () => {
+  
+  const { isLoggedIn, logout } = useAuth()
 
   const GuestNavbar = () => {
     return (
@@ -74,17 +77,19 @@ const Navbar = () => {
             <Typography component='div' sx={{ flexGrow: 1 }}></Typography>
             <Stack direction='row' spacing={4}>
               <Link to='/checkout'>
-                <ShoppingCartIcon sx={{color:'#5B4947'}} />
+                <ShoppingCartIcon sx={{color:'#5B4947', pt:1}} />
               </Link>
               <Link to='/myclass' style={{textDecoration:'none'}}>
-                <Typography sx={{color:'#5B4947'}}>My Class</Typography>
+                <Typography sx={{color:'#5B4947', pt:1}}>My Class</Typography>
               </Link>
               <Link to='/invoice' style={{textDecoration:'none'}}>
-                <Typography sx={{color:'#5B4947'}}>Invoice</Typography>
+                <Typography sx={{color:'#5B4947', pt:1}}>Invoice</Typography>
               </Link>
-              <Typography sx={{color:'#5B4947'}}>|</Typography>
-              <PersonIcon sx={{color:'#FABC1D'}}/>
-              <LogoutIcon sx={{color:'#5B4947'}}/>
+              <Typography sx={{color:'#5B4947', pt:1}}>|</Typography>
+              <PersonIcon sx={{color:'#FABC1D', pt:1}}/>
+              <IconButton onClick={logout}>
+                <LogoutIcon sx={{color:'#5B4947'}}/>
+              </IconButton>
             </Stack>
           </Toolbar>
         </AppBar>
@@ -95,8 +100,9 @@ const Navbar = () => {
 
   return (
     <div>
-      <GuestNavbar/>
-      <UserNavbar/>
+      {
+        isLoggedIn ? <UserNavbar/> : <GuestNavbar/>
+      }
       <Outlet/>
     </div>
   )

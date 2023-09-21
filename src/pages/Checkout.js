@@ -7,6 +7,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PaymentMethod from '../components/PaymentMethod';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
+
 
 const primary = createTheme({
     palette: {
@@ -31,14 +33,15 @@ const Checkout = () => {
     const [totalPrice, settotalPrice] = useState(0)
     const [course, setCourse] = useState(0)
     const [dataOrder, setDataOrder] = useState([])
-    const id_User = "d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9"
+    const { payload } = useAuth()
+    axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
 
     useEffect(() => {
         cartView()
     },[isItemDeleted])
 
     const cartView = async () => {
-        axios.get(process.env.REACT_APP_API_URL + `/Cart/GetCartByIdUser?id_user=${id_User}`)
+        axios.get(process.env.REACT_APP_API_URL + `/Cart/GetCartByIdUser`)
         .then(res => {
             setCart(res.data)
             setCheckedState(new Array(res.data.length).fill(false));

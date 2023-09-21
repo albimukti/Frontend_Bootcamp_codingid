@@ -10,6 +10,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types'
+import useAuth from '../hooks/useAuth';
 
 const primary = createTheme({
     palette: {
@@ -39,8 +40,9 @@ const payments = [
 const PaymentMethod = (props) => {
   const { onClose, selectedValue, open, totalPrice, totalCourse, orderDetail } = props;
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const id_user = 'd4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9'
   const navigate = useNavigate()
+  const { payload } = useAuth()
+  axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -70,7 +72,6 @@ const PaymentMethod = (props) => {
       date_create : new Date().toISOString(),
       total_course : totalCourse,
       total_price : totalPrice,
-      fk_id_user : id_user,
       fk_id_payment : selectedIndex + 1
     }
 

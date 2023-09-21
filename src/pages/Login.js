@@ -3,15 +3,17 @@ import { Typography, TextField, Grid, Button, Stack } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
+
+const secondary = createTheme({
+    palette: {
+        primary: {
+            main: '#FABC1D'
+        },
+    },
+});
 
 const Login = () => {
-    const secondary = createTheme({
-        palette: {
-            primary: {
-                main: '#FABC1D'
-            },
-        },
-    });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,12 +21,15 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate ()
 
+    const { login } = useAuth()
+
     const handleLogin = () => {
         axios.post(process.env.REACT_APP_API_URL + '/User/Login', {
             email: email,
             password: password
         }).then(res => {
             if (res.status === 200) {
+                login(res.data)
                 navigate('/')
             }
         }).catch(error => {

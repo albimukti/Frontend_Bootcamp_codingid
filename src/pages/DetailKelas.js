@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import { Box, Typography, Grid, Card, CardMedia, CardContent, Select, MenuItem, FormControl, InputLabel, Stack, Button } from '@mui/material'
 import axios from 'axios'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import useAuth from '../hooks/useAuth';
 
 const primary = createTheme({
     palette: {
@@ -29,7 +30,8 @@ const DetailKelas = () => {
 
     const { typeName, title} = useParams()
     const navigate = useNavigate()
-    const id_user = "d4e2a410-fd73-4e39-8ed2-9a14c9d9f6a9"
+    const { payload } = useAuth()
+    axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -57,10 +59,9 @@ const DetailKelas = () => {
         setSchedule(event.target.value)
     }
 
-    const addCart = (schedule, id_user, id_menu) => {
+    const addCart = (schedule, id_menu) => {
         axios.post(`${process.env.REACT_APP_API_URL}/Cart/AddCart`, {
             schedule : schedule,
-            fk_id_user : id_user,
             fk_id_menu : id_menu
         })
         .then(res => {console.log('Sukses:', res.data)})
@@ -106,7 +107,7 @@ const DetailKelas = () => {
                         <Typography>{schedule}</Typography>
                         <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
-                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, id_user, kelas.id_menu)}>Add to Cart</Button>
+                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, kelas.id_menu)}>Add to Cart</Button>
                             </ThemeProvider>
                             <ThemeProvider theme={secondary}>
                                 <Link to='/checkout'>
