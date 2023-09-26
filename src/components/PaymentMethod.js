@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -28,21 +28,33 @@ const primary = createTheme({
     },
   });
 
-const payments = [
-  {type : 'Gopay', image : 'Gopay.png'},
-  {type : 'Ovo', image : 'Ovo.png'},
-  {type : 'Dana', image : 'Dana.png'},
-  {type : 'Mandiri', image : 'Mandiri.png'},
-  {type : 'BCA', image : 'BCA.png'},
-  {type : 'BNI', image : 'BNI.png'}
-]
+// const payments = [
+//   {type : 'Gopay', image : 'Gopay.png'},
+//   {type : 'Ovo', image : 'Ovo.png'},
+//   {type : 'Dana', image : 'Dana.png'},
+//   {type : 'Mandiri', image : 'Mandiri.png'},
+//   {type : 'BCA', image : 'BCA.png'},
+//   {type : 'BNI', image : 'BNI.png'}
+// ]
 
 const PaymentMethod = (props) => {
   const { onClose, selectedValue, open, totalPrice, totalCourse, orderDetail } = props;
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedPayment, setSelectedPayment] = useState()
+  const [paymentItem, setPaymentItem] = useState([])
   const navigate = useNavigate()
   const { payload } = useAuth()
   axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+
+  useEffect(() => {
+    payments()
+  },[])
+
+  const payments = () => {
+    axios.get(process.env.REACT_APP_API_URL + '/Payment/GetAllPayments')
+    .then(res => setPaymentItem(res.data))
+    .catch(error => console.log(error))
+  }
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -50,6 +62,7 @@ const PaymentMethod = (props) => {
 
   const handleListItemClick = (value, index) => {
     setSelectedIndex(index)
+    setSelectedPayment(value)
   };
   
   const scheduleConvert = (date) => {
@@ -68,11 +81,9 @@ const PaymentMethod = (props) => {
 
   const handleCheckout = async () => {
     const createOrder = {
-      id_order : 0,
-      date_create : new Date().toISOString(),
       total_course : totalCourse,
       total_price : totalPrice,
-      fk_id_payment : selectedIndex + 1
+      fk_id_payment : selectedPayment
     }
 
     let dataOrder
@@ -80,10 +91,8 @@ const PaymentMethod = (props) => {
     await axios.post(process.env.REACT_APP_API_URL + '/Order/CreateOrder', createOrder)
     .then(res => {
       dataOrder = orderDetail.map((item) => ({
-        id_detail: 0,
-        schedule: scheduleConvert(item.schedule),
         fk_id_order: res.data.id_order,
-        fk_id_menu: item.id_menu
+        fk_id_schedule: item.id_schedule
       }));
     })
     .catch(error => console.log(error))
@@ -121,11 +130,11 @@ const PaymentMethod = (props) => {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle sx={{fontWeight:'bold', px:7, pb:0}}>Select Payment Method</DialogTitle>
       <List sx={{ px:1 }}>
-        {payments.map((item, index) => (
+        {paymentItem && paymentItem.map((item, index) => (
           <ListItem sx={{py:0}} disableGutters key={index}>
-            <ListItemButton selected={selectedIndex === index} onClick={() => handleListItemClick(item.type, index)}>
-              <Box component='img' sx={{height:'50px'}} src = {`/images/Soup Image/Payment Methods/${item.image}`}/>
-              <ListItemText sx={{px:2}} primary={item.type} />
+            <ListItemButton selected={selectedIndex === index} onClick={() => handleListItemClick(item.id_payment, index)}>
+              <Box component='img' sx={{height:'50px'}} src={`data:image/png;base64,${item.logo}`}/>
+              <ListItemText sx={{px:2}} primary={item.payment_name} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -145,9 +154,9 @@ const PaymentMethod = (props) => {
 }
 
 PaymentMethod.propTypes = {
-  onClose: PropTypes.func, 
+  onClose: PropTypes.func.isRequired, 
   selectedValue: PropTypes.func, 
-  open: PropTypes.bool, 
+  open: PropTypes.bool.isRequired, 
   totalPrice: PropTypes.number.isRequired, 
   totalCourse: PropTypes.number.isRequired, 
   orderDetail: PropTypes.array.isRequired

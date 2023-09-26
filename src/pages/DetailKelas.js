@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
-import { Box, Typography, Grid, Card, CardMedia, CardContent, Select, MenuItem, FormControl, InputLabel, Stack, Button } from '@mui/material'
+import { Box, Typography, Grid, Card, CardMedia, CardContent, Select, MenuItem, FormControl, InputLabel, Stack, Button, Snackbar, Alert } from '@mui/material'
 import axios from 'axios'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useAuth from '../hooks/useAuth';
@@ -27,11 +27,12 @@ const DetailKelas = () => {
     const [kelas, setKelas] = useState([])
     const [menu, setMenu] = useState([]);
     const [schedule, setSchedule] = useState('')
+    const [date, setDate] = useState([])
 
     const { typeName, title} = useParams()
     const navigate = useNavigate()
     const { payload } = useAuth()
-    axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+    
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -39,17 +40,29 @@ const DetailKelas = () => {
         menuFood()
     }, [title])
 
-    const course = async () => {
+    const course = () => {
         axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTitle?title=${title}`)
-        .then(res => setKelas(res.data))
+          .then(res => {
+            setKelas(res.data);
+            scheduleDate(res.data.id_menu);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+      
+
+    const menuFood = () => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTypeName?type_name=${typeName}`)
+        .then(res => setMenu(res.data))
         .catch(error => {
             console.error(error);
         });
     }
 
-    const menuFood = async () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTypeName?type_name=${typeName}`)
-        .then(res => setMenu(res.data))
+    const scheduleDate = (menu) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Schedule/GetSchedulesByMenu?id_menu=${menu}`)
+        .then(res => setDate(res.data))
         .catch(error => {
             console.error(error);
         });
@@ -59,15 +72,54 @@ const DetailKelas = () => {
         setSchedule(event.target.value)
     }
 
-    const addCart = (schedule, id_menu) => {
-        axios.post(`${process.env.REACT_APP_API_URL}/Cart/AddCart`, {
-            schedule : schedule,
-            fk_id_menu : id_menu
-        })
-        .then(res => {console.log('Sukses:', res.data)})
-        .catch(error => {
-            console.error(error);
-        });
+    const [open, setOpen] = useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+
+        setOpen(false);
+    };
+
+    const addCart = (schedule, opened) => {
+        if (opened) {
+            setOpen(true)
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+            axios.post(`${process.env.REACT_APP_API_URL}/Cart/AddCart`, {
+                fk_id_schedule: schedule
+            })
+            .then(console.log('Sukses'))
+            .catch(error => {
+                console.error(error);
+            });
+        } else {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+            axios.post(`${process.env.REACT_APP_API_URL}/Cart/AddCart`, {
+                fk_id_schedule: schedule
+            })
+            .then(console.log('Sukses'))
+            .catch(error => {
+                console.error(error);
+            });
+            
+            navigate('/checkout')
+        }
+    }
+
+    const formatDate = (inputDate) => {
+        const date = new Date(inputDate);
+      
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      
+        const dayOfWeek = days[date.getDay()];
+        const dayOfMonth = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+      
+        return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
     }
 
   return (
@@ -96,23 +148,17 @@ const DetailKelas = () => {
                                 label="Select Schedule"
                                 onChange={handleSelect}
                             >
-                                <MenuItem value={'2022-07-25'}>Monday, 25 July 2022</MenuItem>
-                                <MenuItem value={'2022-07-26'}>Tuesday, 26 July 2022</MenuItem>
-                                <MenuItem value={'2022-07-27'}>Wednesday, 27 July 2022</MenuItem>
-                                <MenuItem value={'2022-07-28'}>Thursday, 28 July 2022</MenuItem>
-                                <MenuItem value={'2022-07-29'}>Friday, 29 July 2022</MenuItem>
-                                <MenuItem value={'2022-07-30'}>Saturday, 30 July 2022</MenuItem>
+                                {date && date.map((list) => (
+                                    <MenuItem value={list.id_schedule} key={list.id_schedule}>{formatDate(list.date)}</MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
-                        <Typography>{schedule}</Typography>
                         <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
-                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, kelas.id_menu)}>Add to Cart</Button>
+                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, true)}>Add to Cart</Button>
                             </ThemeProvider>
                             <ThemeProvider theme={secondary}>
-                                <Link to='/checkout'>
-                                    <Button sx={{px:7, borderRadius:2, color:primary}} variant='contained'>Buy Now</Button>
-                                </Link>
+                                <Button sx={{px:7, borderRadius:2, color:primary}} variant='contained' onClick={() => addCart(schedule, false)}>Buy Now</Button>
                             </ThemeProvider>
                         </Stack>
                     </Grid>
@@ -152,6 +198,11 @@ const DetailKelas = () => {
                         </Grid>
                     </Box>
                 </Box>
+                {open ? (<Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Course has been added to cart
+                </Alert>
+            </Snackbar>) : null}
         </Box>
         <Footer/>
     </div>

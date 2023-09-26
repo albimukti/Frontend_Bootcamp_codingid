@@ -27,22 +27,19 @@ const ForgotPassword = () => {
     const navigate = useNavigate()
 
     const handleForgotPassword = () => {
-        if (errorMessage === '') {
-            setErrorMessage('Email is Empty')
-        } else {
-            axios.post(`${process.env.REACT_APP_API_URL}/User/ForgetPassword?email=${email}`)
-            .then(res => {
-                console.log(res.status);
-                if (res.status === 200) {
-                    alert("Please check your email for reset password")
-                }
-            }).catch(error => {
-                console.log(error.response.status);
-                if (error.response.status !== 200){
-                    setErrorMessage(error.response.data)
-                }
-            })
-        }
+        axios.post(`${process.env.REACT_APP_API_URL}/User/ForgetPassword?email=${email}`)
+        .then(res => {
+            console.log(res.status);
+            if (res.status === 200) {
+                alert("Please check your email for reset password")
+            }
+        }).catch(error => {
+            console.log(error.response.status);
+            if (error.response.status !== 200){
+                setErrorMessage(error.response.data)
+            }
+        })
+        
     }
 
     return (

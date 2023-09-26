@@ -82,36 +82,19 @@ const Invoice = () => {
     </Typography>
   ];
 
-  const dateConvert = (date) => {
-
-    const tanggalObjek = new Date(date);
-
-    const namaBulan = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ];
-
-    // Ambil informasi tanggal, bulan, dan tahun
-    const tanggal = tanggalObjek.getDate();
-    const bulan = namaBulan[tanggalObjek.getMonth()];
-    const tahun = tanggalObjek.getFullYear();
-
-    // Buat string hasil dengan format yang diinginkan
-    const hasil = tanggal + " " + bulan + " " + tahun;
-
-    // Tampilkan hasil
-    return hasil
-  }
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+  
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
+    const dayOfWeek = days[date.getDay()];
+    const dayOfMonth = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+  
+    return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
+}
 
     return (
         <div>
@@ -137,12 +120,12 @@ const Invoice = () => {
                             <StyledTableRow key={row.id_order}>
                               <StyledTableCell align="center">{index + 1}</StyledTableCell>
                               <StyledTableCell align="center">{row.invoice}</StyledTableCell>
-                              <StyledTableCell align="center">{dateConvert(row.date_create)}</StyledTableCell>
+                              <StyledTableCell align="center">{formatDate(row.date_created)}</StyledTableCell>
                               <StyledTableCell align="center">{row.total_course}</StyledTableCell>
                               <StyledTableCell align="center">
                                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.total_price)}
                                 </StyledTableCell>
-                              <StyledTableCell align="center">{<DetailButton data={row.invoice}/>}</StyledTableCell>
+                              <StyledTableCell align="center">{<DetailButton data={row.id_order}/>}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                         </TableBody>

@@ -31,7 +31,7 @@ const Body = () => {
     }
 
     const typeFood = () => {
-        axios.get(process.env.REACT_APP_API_URL + '/Type')
+        axios.get(process.env.REACT_APP_API_URL + '/Type/GetAllType')
         .then(res => setType(res.data))
         .catch(error => {
             console.error(error);

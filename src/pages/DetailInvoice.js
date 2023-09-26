@@ -32,9 +32,7 @@ const DetailInvoice = () => {
   const [dataInvoice, setDataInvoice] = useState([])
   const [dataOrder, setDataOrder] = useState([])
 
-  const { invoice } = useParams()
-  const getInvoice = invoice.match(/([a-zA-Z]+)([0-9]+)/)
-  const invoiceNumber = parseInt(getInvoice[2], 10)
+  const { id } = useParams()
 
   useEffect(() => {
     getDataOrder()
@@ -42,13 +40,13 @@ const DetailInvoice = () => {
   }, [])
 
   const getDataOrder = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrderById?id_order=${invoiceNumber}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrderById?id_order=${id}`)
     .then(res => setDataOrder(res.data))
     .catch(error => console.log(error))
   }
 
   const getDataInvoice = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/OrderDetail/GetDetailOrder?id_order=${invoiceNumber}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/OrderDetail/GetDetailOrder?id_order=${id}`)
     .then(res => {
       setDataInvoice(res.data);
     })
@@ -69,82 +67,18 @@ const DetailInvoice = () => {
         </Typography>
   ];
 
-  const dateConvert = (date) => {
-
-    const tanggalObjek = new Date(date);
-
-    const namaBulan = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ];
-
-    // Ambil informasi tanggal, bulan, dan tahun
-    const tanggal = tanggalObjek.getDate();
-    const bulan = namaBulan[tanggalObjek.getMonth()];
-    const tahun = tanggalObjek.getFullYear();
-
-    // Buat string hasil dengan format yang diinginkan
-    const hasil = tanggal + " " + bulan + " " + tahun;
-
-    // Tampilkan hasil
-    return hasil
-  }
-
-  const scheduleConvert = (date) => {
-
-      // Parse tanggal dengan format yang diberikan
-      var parts = date.split(/[\s/:]+/);
-      var tanggalObjek = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0], parts[3], parts[4], parts[5]));
-
-      // Daftar nama hari dalam bahasa Inggris
-      var namaHari = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-      ];
-
-      // Daftar nama bulan dalam bahasa Inggris
-      var namaBulan = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-      ];
-
-      // Ambil informasi tanggal, bulan, hari, dan tahun
-      var hari = namaHari[tanggalObjek.getUTCDay()];
-      var tanggal = tanggalObjek.getUTCDate();
-      var bulan = namaBulan[tanggalObjek.getUTCMonth()];
-      var tahun = tanggalObjek.getUTCFullYear();
-
-      // Buat string hasil dengan format yang diinginkan
-      var hasil = hari + ", " + tanggal + " " + bulan + " " + tahun;
-
-      // Tampilkan hasil
-      return hasil;
-
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+  
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
+    const dayOfWeek = days[date.getDay()];
+    const dayOfMonth = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+  
+    return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
   }
 
     return (
@@ -156,8 +90,8 @@ const DetailInvoice = () => {
                 <Typography variant='h6' sx={{color:'#4F4F4F', fontWeight:'bold', mt:2}}>Details Invoice</Typography>
                 <Box sx={{display:'flex', flexDirection:{sm:'row', xs:'column'}, justifyContent:{sm:'space-between', xs:'flex-start'}, alignItems:{sm:'flex-end'}, mt:2}}>
                     <Box>
-                        <Typography>No. Invoice &nbsp;: {invoice}</Typography>
-                        <Typography>Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;: {dateConvert(dataOrder.date_create)}</Typography>
+                        <Typography>No. Invoice &nbsp;: {dataOrder.invoice}</Typography>
+                        <Typography>Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;: {formatDate(dataOrder.date_created)}</Typography>
                     </Box>
                     <Typography variant='h6' sx={{color:'#4F4F4F', fontWeight:'bold', mt:{sm:0, xs:1}}}>
                       Total Price &nbsp; &nbsp; {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(dataOrder.total_price)}
@@ -180,7 +114,7 @@ const DetailInvoice = () => {
                                 <StyledTableCell align="center">{index + 1}</StyledTableCell>
                                 <StyledTableCell align="center">{row.title}</StyledTableCell>
                                 <StyledTableCell align="center">{row.type_name}</StyledTableCell>
-                                <StyledTableCell align="center">{scheduleConvert(row.schedule)}</StyledTableCell>
+                                <StyledTableCell align="center">{formatDate(row.date)}</StyledTableCell>
                                 <StyledTableCell align="center">
                                   {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.price)}
                                 </StyledTableCell>

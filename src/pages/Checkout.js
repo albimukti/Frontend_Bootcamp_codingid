@@ -61,7 +61,7 @@ const Checkout = () => {
             console.error(error);
         });
 
-        setIsItemDeleted(true);        
+        setIsItemDeleted(!isItemDeleted);        
     }
 
     const handleOnChange = (event, position) => {
@@ -107,51 +107,18 @@ const Checkout = () => {
     };
       
 
-    const dateConvert = (date) => {
-
-        // Parse tanggal dengan format yang diberikan
-        var parts = date.split(/[\s/:]+/);
-        var tanggalObjek = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0], parts[3], parts[4], parts[5]));
-
-        // Daftar nama hari dalam bahasa Inggris
-        var namaHari = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-        ];
-
-        // Daftar nama bulan dalam bahasa Inggris
-        var namaBulan = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-        ];
-
-        // Ambil informasi tanggal, bulan, hari, dan tahun
-        var hari = namaHari[tanggalObjek.getUTCDay()];
-        var tanggal = tanggalObjek.getUTCDate();
-        var bulan = namaBulan[tanggalObjek.getUTCMonth()];
-        var tahun = tanggalObjek.getUTCFullYear();
-
-        // Buat string hasil dengan format yang diinginkan
-        var hasil = hari + ", " + tanggal + " " + bulan + " " + tahun;
-
-        // Tampilkan hasil
-        return hasil;
-
+    const formatDate = (inputDate) => {
+        const date = new Date(inputDate);
+      
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      
+        const dayOfWeek = days[date.getDay()];
+        const dayOfMonth = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+      
+        return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
     }
 
     const children = (
@@ -168,7 +135,7 @@ const Checkout = () => {
                         <Box sx={{px:{sm:3, xs:6}}}>
                             <Typography sx={{pb:1, mt:{sm:0, xs:2}}}>{list.type_name}</Typography>
                             <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>{list.title}</Typography>
-                            <Typography sx={{pb:1}}>Schedule : {dateConvert(list.schedule)}</Typography>
+                            <Typography sx={{pb:1}}>Schedule : {formatDate(list.date)}</Typography>
                             <Typography variant='h6' sx={{color:secondary.palette.primary.main, pb:1, fontWeight:'bold'}}>
                                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(list.price)}
                             </Typography>
@@ -222,7 +189,6 @@ const Checkout = () => {
                     <Typography sx={{color:'#FABC1D', fontWeight:'bold', fontSize:{sm:'1.2rem', xs:'1.1rem'}, pt:1}}>
                         {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalPrice)}
                     </Typography>
-                    <Typography>{dataOrder.length}</Typography>
                 </Stack>
                 <Box>
                     <ThemeProvider theme={secondary}>
