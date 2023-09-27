@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Grid, Typography, TextField, Stack, Button, Box, Alert } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Grid, Typography, TextField, Stack, Button, Box, Alert, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const ForgotPassword = () => {
@@ -24,14 +24,14 @@ const ForgotPassword = () => {
 
     const [email, setEmail] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-    const navigate = useNavigate()
+    const [open, setOpen] = useState(false);
 
     const handleForgotPassword = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/User/ForgetPassword?email=${email}`)
         .then(res => {
             console.log(res.status);
             if (res.status === 200) {
-                alert("Please check your email for reset password")
+                setOpen(true);
             }
         }).catch(error => {
             console.log(error.response.status);
@@ -41,6 +41,10 @@ const ForgotPassword = () => {
         })
         
     }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div>
@@ -74,6 +78,21 @@ const ForgotPassword = () => {
                     </Stack>
                 </Grid>
             </Grid>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        Please check your email for reset password
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Ok</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Grid, Button, Stack, Box } from '@mui/material';
+import { Typography, TextField, Grid, Button, Stack, Box, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const primary = createTheme({
+    palette: {
+        primary: {
+            main: '#5B4947'
+        },
+    },
+});
+
+const secondary = createTheme({
+    palette: {
+        primary: {
+            main: '#FABC1D'
+        },
+    },
+});
 
 const ResetPassword = () => {
-    const primary = createTheme({
-        palette: {
-            primary: {
-                main: '#5B4947'
-            },
-        },
-    });
-
-    const secondary = createTheme({
-        palette: {
-            primary: {
-                main: '#FABC1D'
-            },
-        },
-    });
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,6 +28,13 @@ const ResetPassword = () => {
     const [passwordError, setPasswordError] = useState(',');
     const [showPassword, setShowPassword] = useState(false); 
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+    const [open, setOpen] = useState(false)
+
+    const navigate = useNavigate()
+
+    const modalLogin = () => {
+        navigate('/login')
+    };
 
     const validateNewPassword = () => {
         if (newPassword.length > 16 || !/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
@@ -41,15 +50,6 @@ const ResetPassword = () => {
           }
     }
 
-    const handleResetPassword = () => {
-        if (!passwordError) {
-        
-            console.log('New Password:', newPassword);
-            console.log('Confirmed Password:', confirmPassword);
-        } else {
-            console.log('Password error:', passwordError);
-        }
-    };
     const handlePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
@@ -57,7 +57,23 @@ const ResetPassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
-    
+    const url = window.location.href;
+    function getParameterValue(url, parameterName) {
+        const urlSearchParams = new URLSearchParams(new URL(url).search);
+        
+        return urlSearchParams.get(parameterName);
+    }
+
+    const email = getParameterValue(url, 'email');
+
+    const handleResetPassword = () => {
+        axios.post(`${process.env.REACT_APP_API_URL}/User/ResetPassword`, {
+            password: newPassword,
+            confirmPassword: confirmPassword,
+            email: email
+        })
+        setOpen(true)
+    }
 
     return (
         <div>
@@ -127,20 +143,30 @@ const ResetPassword = () => {
                             </Link>
                         </ThemeProvider>
                         <ThemeProvider theme={secondary}>
-                            <Link to = '/login' >
                             <Box>
                                 <Button sx={{ mt:4, px: 4, borderRadius: 2 }}variant='contained' onClick={handleResetPassword}>
                                     Submit
                                 </Button>
-                            </Box>
-
-                            </Link>
-                           
-                                
+                            </Box>    
                         </ThemeProvider>
                     </Stack>
                 </Grid>
             </Grid>
+            <Dialog
+                open={open}
+                onClose={modalLogin}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        Password Changed Successfully
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={modalLogin}>Login</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

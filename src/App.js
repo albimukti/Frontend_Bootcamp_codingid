@@ -13,6 +13,13 @@ import SuccessPurchase from "./pages/SuccessPurchase";
 import Invoice from "./pages/Invoice";
 import DetailInvoice from "./pages/DetailInvoice";
 import MyClass from "./pages/MyClass";
+import LoginAdmin from "./pages/LoginAdmin";
+import DashboardAdmin from "./components/DashboardAdmin";
+import ManageCategory from "./pages/ManageCategory";
+import ManageCourse from "./pages/ManageCourse";
+import ManageUser from "./pages/ManageUser";
+import ManagePayment from "./pages/ManagePayment";
+import ManageInvoice from "./pages/ManageInvoice";
 
 function App() {
   return (
@@ -34,7 +41,16 @@ function App() {
           <Route path = "/detail-invoice/:id" element = {<DetailInvoice/>} />
           <Route path = "/myclass" element = {<MyClass/>} />
         </Route>
-        
+
+        <Route path = "/login-admin" element = {<LoginAdmin/>} />
+
+        <Route path = "/dashboard-admin" element = {<DashboardAdmin/>}>
+          <Route index element = {<ManageCategory/>} />
+          <Route path = "manage-course" element = {<ManageCourse/>} />
+          <Route path = "manage-user" element = {<ManageUser/>} />
+          <Route path = "manage-payment" element = {<ManagePayment/>} />
+          <Route path = "manage-invoice" element = {<ManageInvoice/>} />
+        </Route>
       </Routes>
     </Router>
   );

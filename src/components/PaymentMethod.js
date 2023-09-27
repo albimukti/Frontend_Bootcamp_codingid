@@ -51,7 +51,7 @@ const PaymentMethod = (props) => {
   },[])
 
   const payments = () => {
-    axios.get(process.env.REACT_APP_API_URL + '/Payment/GetAllPayments')
+    axios.get(process.env.REACT_APP_API_URL + '/Payment/GetActivePayments')
     .then(res => setPaymentItem(res.data))
     .catch(error => console.log(error))
   }

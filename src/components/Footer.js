@@ -16,7 +16,7 @@ const Footer = () => {
     }, [])
 
     const course = async () => {
-        axios.get(process.env.REACT_APP_API_URL + '/Type/GetAllType')
+        axios.get(process.env.REACT_APP_API_URL + '/Type/GetActiveType')
         .then(response => setKelas(response.data))
         .catch(error => {
             console.error(error);

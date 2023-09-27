@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Typography, TextField, Grid, Button, Stack, Alert } from '@mui/material'
+import { Typography, TextField, Grid, Button, Stack, Alert, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const secondary = createTheme({
@@ -19,8 +19,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [activeError, setActiveError] = useState(false)
-
-    const navigate = useNavigate()
+    const [open, setOpen] = useState(false);
 
     const validateInput = () => {
         let at = email.indexOf("@");
@@ -44,10 +43,15 @@ const Register = () => {
         axios.post(process.env.REACT_APP_API_URL + '/User/CreateUser', {
             name: nama,
             email: email,
-            password: password
+            password: password,
+            role: "user"
         })
-        navigate('/success-register')
+        setOpen(true)
     }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div>
@@ -83,6 +87,24 @@ const Register = () => {
                     </Typography>
                 </Grid>
             </Grid>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Successfully Register"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please Check Your Email for Activate Account 
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Ok</Button>
+                </DialogActions>
+            </Dialog>
         </div>    
     )
 }
