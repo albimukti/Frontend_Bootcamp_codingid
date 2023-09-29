@@ -56,6 +56,8 @@ export const AuthProvider = ({ children }) => {
         setCookie("payload", null, 0);
 
         setPayload(null)
+
+        
     }
 
     return (

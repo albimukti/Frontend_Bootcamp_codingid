@@ -5,7 +5,7 @@ import { Typography, Box, TableContainer, Table, TableHead, TableBody, TableRow,
 import axios from 'axios';
 import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const secondary = createTheme({
     palette: {
@@ -35,18 +35,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const EditButton = ({data}) => {
-    return (
-        <ThemeProvider theme={secondary}>
-            <Link>
-                <Button sx={{px:4, borderRadius:2, color:'black', textTransform:'none'}} variant='contained'>Edit</Button>
-            </Link>
-        </ThemeProvider>
-    )
-}
-
 const ManageCourse = () => {
     const [course, setCourse] = useState([])
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         getCourse()
@@ -60,9 +52,26 @@ const ManageCourse = () => {
         });
     }
 
+    const EditButton = ({id}) => {
+        return (
+            <ThemeProvider theme={secondary}>
+                <Link to={`/dashboard-admin/update-course/${id}`}>
+                    <Button sx={{px:4, borderRadius:2, color:'black', textTransform:'none'}} variant='contained'>
+                        Edit
+                    </Button>
+                </Link>
+            </ThemeProvider>
+        )
+    }
+
     return (
         <div>
-            <Typography variant="h5">Manage Course</Typography>
+            <Box sx={{display:'flex', justifyContent:'space-between'}}>
+                <Typography variant="h5">Manage Course</Typography>
+                <Button sx={{borderRadius:2, textTransform:'none'}} variant='contained' onClick={() => navigate('/dashboard-admin/add-course')}>
+                    Add New Course
+                </Button>
+            </Box>
 
             <TableContainer sx={{mt:3}} component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="simple table">
@@ -83,14 +92,18 @@ const ManageCourse = () => {
                             <StyledTableCell align="center">{item.type_name}</StyledTableCell>
                             <StyledTableCell align="center">{item.title}</StyledTableCell>
                             <StyledTableCell align="center">
-                                <Box component='img' sx={{height:'100px'}} src={`data:image/png;base64,${item.image}`}/> 
+                                <Box component='img' sx={{height:'100px', width:'150px'}} src={`data:image/png;base64,${item.image}`}/> 
                             </StyledTableCell>
                             <StyledTableCell align="center">
                                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(item.price)}
                             </StyledTableCell>
                             <StyledTableCell align="justify">{item.description}</StyledTableCell>
-                            <StyledTableCell align="center">-</StyledTableCell>
-                            <StyledTableCell align="center"><EditButton/></StyledTableCell>
+                            <StyledTableCell align="center" sx={{color:item.status === 'Active' ? 'green' : 'red', fontWeight:'bold'}}>
+                                {item.status}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                                <EditButton id = {item.id_menu}/>
+                            </StyledTableCell>
                           </StyledTableRow>
                         ))}
                     </TableBody>

@@ -5,7 +5,7 @@ import { Typography, Box, TableContainer, Table, TableHead, TableBody, TableRow,
 import axios from 'axios';
 import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const secondary = createTheme({
     palette: {
@@ -35,16 +35,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const EditButton = ({data}) => {
-    return (
-        <ThemeProvider theme={secondary}>
-            <Link>
-                <Button sx={{px:4, borderRadius:2, color:'black', textTransform:'none'}} variant='contained'>Edit</Button>
-            </Link>
-        </ThemeProvider>
-    )
-}
-
 const ManageCategory = () => {
     const [category, setCategory] = useState([])
 
@@ -60,10 +50,26 @@ const ManageCategory = () => {
         });
     }
 
+    const navigate = useNavigate()
+
+    const EditButton = ({id}) => {
+        return (
+            <ThemeProvider theme={secondary}>
+                <Button sx={{px:4, borderRadius:2, color:'black', textTransform:'none'}} variant='contained' onClick={() => navigate(`update-category/${id}`)}>
+                    Edit
+                </Button>
+            </ThemeProvider>
+        )
+    }
+
     return (
         <div>
-            <Typography variant="h5">Manage Category</Typography>
-
+            <Box sx={{display:'flex', justifyContent:'space-between'}}>
+                <Typography variant="h5">Manage Category</Typography>
+                <Button sx={{borderRadius:2, textTransform:'none'}} variant='contained' onClick={() => navigate('/dashboard-admin/add-category')}>
+                    Add New Category
+                </Button>
+            </Box>
             <TableContainer sx={{mt:3}} component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="simple table">
                     <TableHead>
@@ -80,12 +86,15 @@ const ManageCategory = () => {
                           <StyledTableRow key={item.id_type}>
                             <StyledTableCell align="center">{item.type_name}</StyledTableCell>
                             <StyledTableCell align="center">
-                                <Box component='img' sx={{height:'100px'}} src={`data:image/png;base64,${item.image}`}/>                                </StyledTableCell>
+                                <Box component='img' sx={{height:'100px', width:'150px'}} src={`data:image/png;base64,${item.image}`}/>
+                            </StyledTableCell>
                             <StyledTableCell align="justify">{item.description}</StyledTableCell>
                             <StyledTableCell align="center" sx={{color:item.status === 'Active' ? 'green' : 'red', fontWeight:'bold'}}>
                                 {item.status}
                             </StyledTableCell>
-                            <StyledTableCell align="center"><EditButton/></StyledTableCell>
+                            <StyledTableCell align="center">
+                                <EditButton id={item.id_type} />
+                            </StyledTableCell>
                           </StyledTableRow>
                         ))}
                     </TableBody>

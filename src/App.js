@@ -20,6 +20,15 @@ import ManageCourse from "./pages/ManageCourse";
 import ManageUser from "./pages/ManageUser";
 import ManagePayment from "./pages/ManagePayment";
 import ManageInvoice from "./pages/ManageInvoice";
+import UpdateCategory from "./pages/UpdateCategory";
+import UpdateCourse from "./pages/UpdateCourse";
+import UpdatePayment from "./pages/UpdatePayment";
+import UpdateUser from "./pages/UpdateUser";
+import AddUser from "./pages/AddUser";
+import AddPayment from "./pages/AddPayment";
+import AddCategory from "./pages/AddCategory";
+import AddCourse from "./pages/AddCourse";
+import ManageDetailInvoice from "./pages/ManageDetailInvoice";
 
 function App() {
   return (
@@ -44,12 +53,21 @@ function App() {
 
         <Route path = "/login-admin" element = {<LoginAdmin/>} />
 
-        <Route path = "/dashboard-admin" element = {<DashboardAdmin/>}>
+        <Route path = "/dashboard-admin/" element = {<DashboardAdmin/>}>
           <Route index element = {<ManageCategory/>} />
           <Route path = "manage-course" element = {<ManageCourse/>} />
           <Route path = "manage-user" element = {<ManageUser/>} />
           <Route path = "manage-payment" element = {<ManagePayment/>} />
           <Route path = "manage-invoice" element = {<ManageInvoice/>} />
+          <Route path = "update-category/:id" element = {<UpdateCategory/>} />
+          <Route path = "update-course/:id" element = {<UpdateCourse/>} />
+          <Route path = "update-payment/:id" element = {<UpdatePayment/>} />
+          <Route path = "update-user/:id" element = {<UpdateUser/>} />
+          <Route path = "add-category" element = {<AddCategory/>} />
+          <Route path = "add-course" element = {<AddCourse/>} />
+          <Route path = "add-user" element = {<AddUser/>} />
+          <Route path = "add-payment" element = {<AddPayment/>} />
+          <Route path = "detail-invoice/:id" element = {<ManageDetailInvoice/>}/>
         </Route>
       </Routes>
     </Router>

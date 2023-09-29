@@ -44,7 +44,8 @@ const Register = () => {
             name: nama,
             email: email,
             password: password,
-            role: "user"
+            role: "User",
+            isActivated: false
         })
         setOpen(true)
     }

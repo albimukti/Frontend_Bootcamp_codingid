@@ -21,6 +21,8 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import useAuth from '../hooks/useAuth';
+import jwt_decode from "jwt-decode";
 
 const drawerWidth = 240;
 
@@ -36,6 +38,11 @@ const DashboardAdmin = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const { isLoggedIn, logout, payload } = useAuth()
+
+  const adminName = jwt_decode(payload.token)
+  console.log(adminName);
+
   const navigate = useNavigate()
 
   const handleDrawerToggle = () => {
@@ -48,7 +55,7 @@ const DashboardAdmin = (props) => {
         <IconButton size='large' edge='start' aria-label='logo'>
           <img src='/images/logo.png' height={'40px'} alt='logo'/>
         </IconButton>
-        Nama Admin
+        {/* {adminName} */}
       </Toolbar>
       <Divider />
       <List>
@@ -95,7 +102,9 @@ const DashboardAdmin = (props) => {
       </List>
       <Divider />
       <ThemeProvider theme={red}>
-        <Button sx={{ mt: 4, ml:6, px: 4, borderRadius: 2 }} variant='contained'>Logout</Button>
+        <Button sx={{ mt: 4, ml:6, px: 4, borderRadius: 2 }} variant='contained' onClick={logout}>
+          Logout
+        </Button>
       </ThemeProvider>
     </div>
   );
@@ -103,7 +112,8 @@ const DashboardAdmin = (props) => {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <>
+      {isLoggedIn ? <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -166,6 +176,9 @@ const DashboardAdmin = (props) => {
         <Outlet/>
       </Box>
     </Box>
+    : null 
+  }
+    </>
   );
 }
 

@@ -123,7 +123,7 @@ const Body = () => {
                         <Grid item lg={3} md={4} sm={6} xs={12} key={list.id_type}>
                             <Link to={`/list-menu-kelas/${list.type_name}`} style={{textDecoration: 'none'}}>
                                 <Card>
-                                    <CardMedia component='img' image={`data:image/png;base64,${list.image}`}/>
+                                    <CardMedia component='img' sx={{maxHeight:'200px'}} image={`data:image/png;base64,${list.image}`}/>
                                     <CardContent>
                                         <Typography sx={{color:'black', textAlign:'center', fontWeight:'bold'}}>{list.type_name}</Typography>
                                     </CardContent>

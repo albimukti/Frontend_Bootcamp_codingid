@@ -5,7 +5,7 @@ import { Typography, Box, TableContainer, Table, TableHead, TableBody, TableRow,
 import axios from 'axios';
 import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const secondary = createTheme({
     palette: {
@@ -35,18 +35,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const EditButton = ({data}) => {
-    return (
-        <ThemeProvider theme={secondary}>
-            <Link>
-                <Button sx={{px:4, borderRadius:2, color:'black', textTransform:'none'}} variant='contained'>Edit</Button>
-            </Link>
-        </ThemeProvider>
-    )
-}
-
 const ManagePayment = () => {
   const [payment, setPayment] = useState([])
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     getPayment()
@@ -60,9 +52,26 @@ const ManagePayment = () => {
       });
   }
 
+  const EditButton = ({id}) => {
+    return (
+        <ThemeProvider theme={secondary}>
+            <Link to={`/dashboard-admin/update-payment/${id}`}>
+                <Button sx={{px:4, borderRadius:2, color:'black', textTransform:'none'}} variant='contained'>
+                    Edit
+                </Button>
+            </Link>
+        </ThemeProvider>
+    )
+  }
+
   return (
     <div>
-      <Typography variant='h5'>Manage Payment Method</Typography>
+      <Box sx={{display:'flex', justifyContent:'space-between'}}>
+        <Typography variant="h5">Manage Payment Method</Typography>
+        <Button sx={{borderRadius:2, textTransform:'none'}} variant='contained' onClick={() => navigate('/dashboard-admin/add-payment')}>
+          Add New Payment
+        </Button>
+      </Box>
 
       <TableContainer sx={{mt:3}} component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="simple table">
@@ -84,7 +93,9 @@ const ManagePayment = () => {
                 <StyledTableCell align="center" sx={{color:item.status === 'Active' ? 'green' : 'red', fontWeight:'bold'}}>
                   {item.status}
                 </StyledTableCell>
-                <StyledTableCell align="center"><EditButton/></StyledTableCell>
+                <StyledTableCell align="center">
+                  <EditButton id = {item.id_payment}/>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
