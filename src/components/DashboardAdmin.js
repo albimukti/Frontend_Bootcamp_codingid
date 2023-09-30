@@ -23,6 +23,7 @@ import { Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useAuth from '../hooks/useAuth';
 import jwt_decode from "jwt-decode";
+import ValidateAdmin from './ValidateAdmin';
 
 const drawerWidth = 240;
 
@@ -40,8 +41,7 @@ const DashboardAdmin = (props) => {
 
   const { isLoggedIn, logout, payload } = useAuth()
 
-  const adminName = jwt_decode(payload.token)
-  console.log(adminName);
+  const decode = jwt_decode(payload.token)
 
   const navigate = useNavigate()
 
@@ -49,13 +49,18 @@ const DashboardAdmin = (props) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleLogout = () => {
+    logout()
+    navigate('/login-admin')
+  }
+
   const drawer = (
     <div>
       <Toolbar>
         <IconButton size='large' edge='start' aria-label='logo'>
           <img src='/images/logo.png' height={'40px'} alt='logo'/>
         </IconButton>
-        {/* {adminName} */}
+        {decode.name}
       </Toolbar>
       <Divider />
       <List>
@@ -102,7 +107,7 @@ const DashboardAdmin = (props) => {
       </List>
       <Divider />
       <ThemeProvider theme={red}>
-        <Button sx={{ mt: 4, ml:6, px: 4, borderRadius: 2 }} variant='contained' onClick={logout}>
+        <Button sx={{ mt: 4, ml:6, px: 4, borderRadius: 2 }} variant='contained' onClick={handleLogout}>
           Logout
         </Button>
       </ThemeProvider>
@@ -110,73 +115,74 @@ const DashboardAdmin = (props) => {
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
-
+  
   return (
     <>
-      {isLoggedIn ? <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar sx={{backgroundColor:'#FABC1D'}}>
-          <IconButton
-            color="default"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+      {decode.role === "Admin" ?
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
+        >
+          <Toolbar sx={{backgroundColor:'#FABC1D'}}>
+            <IconButton
+              color="default"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: 'none' } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography color='black' variant="h6" noWrap component="div">
+              Soup Dashboard Administrator
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        >
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: 'block', sm: 'none' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography color='black' variant="h6" noWrap component="div">
-            Soup Dashboard Administrator
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
+            {drawer}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 3, width: { xs: `calc(100% - ${drawerWidth}px)` } }}
         >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
+          <Toolbar />
+          <Outlet/>
+        </Box>
       </Box>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: { xs: `calc(100% - ${drawerWidth}px)` } }}
-      >
-        <Toolbar />
-        <Outlet/>
-      </Box>
-    </Box>
-    : null 
+    : <ValidateAdmin/> 
   }
     </>
   );
