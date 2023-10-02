@@ -11,3 +11,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Custom styling for react-datepicker */
+/* Change background color of the date picker */
+.react-datepicker {
+  font-size: 16px;
+  /* Your other styles here */
+}
+
+/* Change the background color of the header */
+.react-datepicker__header {
+  background-color: #333;
+  color: #fff;
+  /* Your other styles here */
+}
+
+/* Change the background color of the days */
+.react-datepicker__day {
+  background-color: #eee;
+  color: #333;
+  /* Your other styles here */
+}
+
+/* Meninggikan input box react-datepicker */
+.react-datepicker__input-container input {
+  height: 34px;
+  width: 110px;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 5px;
+}
+

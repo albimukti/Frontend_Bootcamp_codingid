@@ -1,39 +1,48 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
 import { Typography, TextField, Grid, Button, Stack } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import useAuth from '../hooks/useAuth';
+import jwt_decode from "jwt-decode";
+
+const secondary = createTheme({
+    palette: {
+        primary: {
+            main: '#FABC1D'
+        },
+    },
+});
 
 const Login = () => {
-    const secondary = createTheme({
-        palette: {
-            primary: {
-                main: '#FABC1D'
-            },
-        },
-    });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);    
     const [errorMessage, setErrorMessage] = useState('');
-    const [data, setData] = useState({
-        email : 'albimukti97@gmail.com', password : 'albi123'
-    })
-    const navigate = useNavigate () 
+    const navigate = useNavigate ()
+
+    const { login } = useAuth()
 
     const handleLogin = () => {
-        if (!email.includes(data.email)) {
-            setErrorMessage('Email yang anda masukkan salah!');
-            return; 
-        }
-
-        if (email === (data.email) && password === (data.password) ) {
-            navigate('/')
-        } else {
-            setErrorMessage('Email atau kata sandi salah. Silakan coba lagi.');
-        }
-    };
+        axios.post(process.env.REACT_APP_API_URL + '/User/Login', {
+            email: email,
+            password: password
+        }).then(res => {
+            const decode = jwt_decode(res.data.token)
+            if (decode.role === 'Admin') {
+                login(res.data)
+                navigate('/dashboard-admin')
+            } else {
+                login(res.data)
+                navigate('/')
+            }
+        }).catch(error => {
+            if (error.response.status !== 200){
+                setErrorMessage(error.response.data)
+            }
+        })
+    }
 
     const handlePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -43,8 +52,8 @@ const Login = () => {
         <div>
           
             <Grid sx={{ mt: 10 }} container>
-                <Grid md={3} xs={1}></Grid>
-                <Grid md={6} mdOffset={3} xs={10}>
+                <Grid item md={3} xs={1}></Grid>
+                <Grid item md={6} xs={10}>
                     <Typography variant='h5'>
                         Welcome Back! Cheff
                     </Typography>
@@ -90,7 +99,7 @@ const Login = () => {
                     )}
                     <Typography sx={{ mt: 2 }}>
                         Forgot Password?
-                        <Link to='/reset-password' style={{ textDecoration: 'none', color: '#2F80ED' }}> Click here</Link>
+                        <Link to='/forgot-password' style={{ textDecoration: 'none', color: '#2F80ED' }}> Click here</Link>
                     </Typography>
                     <Stack direction="row" justifyContent={{ lg: "flex-end", xs: "center" }}>
                         <ThemeProvider theme={secondary}>

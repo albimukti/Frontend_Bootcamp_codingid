@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Typography, TextField, Grid, Button, Stack, Alert } from '@mui/material'
+import { Typography, TextField, Grid, Button, Stack, Alert, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const secondary = createTheme({
     palette: {
@@ -18,8 +19,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [activeError, setActiveError] = useState(false)
-
-    const navigate = useNavigate()
+    const [open, setOpen] = useState(false);
 
     const validateInput = () => {
         let at = email.indexOf("@");
@@ -35,16 +35,41 @@ const Register = () => {
             setErrorMessage('Password did not match')
             setActiveError(true)
         } else {
-            //navigasi ke halaman success register setelah melalui validasi form input
-            navigate('/success-register')
+            handleRegister()
         }
     }
+
+    const handleRegister = () => {
+        axios.post(process.env.REACT_APP_API_URL + '/User/CreateUser', {
+            name: nama,
+            email: email,
+            password: password,
+            role: "User",
+            isActivated: false
+        })
+        .then(res => {
+            if (res.status === 200) {
+                setOpen(true)
+            }
+        })
+        .catch(error => {
+            if (error.response.status !== 200){
+                setErrorMessage(error.response.data)
+                setActiveError(true)
+            }
+        })
+        
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div>
             <Grid sx={{mt:{md:10, xs:7}}} container>
-                <Grid md={3} xs={1}></Grid>
-                <Grid md={6} xs={10}>
+                <Grid item md={3} xs={1}></Grid>
+                <Grid item md={6} xs={10}>
                     <Typography variant='h5'>
                         Are you ready to become a professional cheff?
                     </Typography>
@@ -52,9 +77,9 @@ const Register = () => {
                         Please register first
                     </Typography>
                     <form>
-                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Name" variant="outlined" type='text' value={nama} 
+                        <TextField sx={{mt:3}} fullWidth id="outlined-name-input" label="Name" variant="outlined" type='text' value={nama} 
                         onChange={(e) => setNama(e.target.value)}/>
-                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' value={email}
+                        <TextField sx={{mt:3}} fullWidth id="outlined-email-input" label="Email" variant="outlined" type='email' value={email}
                         onChange={(e) => setEmail(e.target.value)} />
                         <TextField sx={{mt:3}} fullWidth id="outlined-password-input" label="Password" type="password" variant="outlined"
                         onChange={(e) => setPassword(e.target.value)}/>
@@ -74,6 +99,24 @@ const Register = () => {
                     </Typography>
                 </Grid>
             </Grid>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Successfully Register"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please Check Your Email for Activate Account 
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Ok</Button>
+                </DialogActions>
+            </Dialog>
         </div>    
     )
 }

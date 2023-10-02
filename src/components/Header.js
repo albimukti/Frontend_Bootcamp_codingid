@@ -7,8 +7,8 @@ const Header = () => {
     <div>
         <Box sx={{backgroundImage: "url('/images/image 3.png')", backgroundSize:'cover', backgroundPosition:'center'}}>
         <Grid container>
-          <Grid lg={3}></Grid>
-          <Grid lg={6}>
+          <Grid item lg={3}></Grid>
+          <Grid item lg={6}>
             <Stack alignItems='center' textAlign={'center'} color={'white'}>
               <Typography variant='h3' sx={{mt:{md:9,xs:6}}}>
                 Be the next great cheff

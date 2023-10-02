@@ -5,9 +5,8 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import EmailIcon from '@mui/icons-material/Email';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import axios from 'axios'
-
 
 const Footer = () => {
     const [kelas, setKelas] = useState()
@@ -17,8 +16,8 @@ const Footer = () => {
     }, [])
 
     const course = async () => {
-        axios.get(`http://localhost:8080/course`)
-        .then(res => setKelas(res.data))
+        axios.get(process.env.REACT_APP_API_URL + '/Type/GetActiveType')
+        .then(response => setKelas(response.data))
         .catch(error => {
             console.error(error);
         });
@@ -38,22 +37,32 @@ const Footer = () => {
                     <Grid container>
                         <Grid item lg={6}>
                         <ul>
-                            {kelas && kelas.map((list, index) => {
-                                if(index < 4) return (<Link to = {`/list-menu-kelas/${list.id}`} style={{textDecoration:'none'}} >
-                                <li style={{color:'white', paddingBottom:10}}>{list.class}</li>
-                                </Link> )
-                            })}
-                            
+                        {kelas && kelas.map((list, index) => {
+                            if (index < 4) {
+                            return (
+                                <Link to={`/list-menu-kelas/${list.type_name}`} style={{ textDecoration: 'none' }} key={index}>
+                                <li style={{ color: 'white', paddingBottom: 10 }}>{list.type_name}</li>
+                                </Link>
+                            );
+                            } else {
+                                return null;
+                            }
+                        })}  
                         </ul>
                         </Grid>
-                        <Grid item lg={6}>
+
+                        <Grid item sm={6}>
                         <ul>
                             {kelas && kelas.map((list, index) => {
-                                if(index >= 4) return (<Link to = {`/list-menu-kelas/${list.id}`} style={{textDecoration:'none'}} >
-                                <li style={{color:'white', paddingBottom:10}}>{list.class}</li>
-                                </Link> )
-                            })}
-                            
+                                if(index >= 4) return (
+                                    <Link to = {`/list-menu-kelas/${list.type_name}`} style={{textDecoration:'none'}} key={index}>
+                                        <li style={{color:'white', paddingBottom:10}}>{list.type_name}</li>
+                                    </Link>
+                                );
+                                else {
+                                    return null;
+                                }
+                            })}     
                         </ul>
                         </Grid>
                     </Grid>

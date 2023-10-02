@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Typography, TextField, Grid, Button, Stack, Box } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React, { useState } from 'react'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Grid, Typography, TextField, Stack, Button, Box, Alert, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const ForgotPassword = () => {
+
     const primary = createTheme({
         palette: {
             primary: {
@@ -11,7 +13,7 @@ const ForgotPassword = () => {
             },
         },
     });
-
+    
     const secondary = createTheme({
         palette: {
             primary: {
@@ -20,35 +22,28 @@ const ForgotPassword = () => {
         },
     });
 
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [invalid, setInvalid] = useState('hidden')
-    const [passwordError, setPasswordError] = useState(',');
-    const [showPassword, setShowPassword] = useState(false); 
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+    const [email, setEmail] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+    const [open, setOpen] = useState(false);
 
-    const validateNewPassword = () => {
-        if (newPassword.length > 16 || !/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
-            setInvalid('visible')
-            setPasswordError('Password must be up to 16 characters and contain letters and numbers');
-          }
-    };
-
-    const validateConfirmPassword = () => {
-        if (newPassword !== confirmPassword) {
-            setInvalid('visible')
-            setPasswordError('Passwords do not match');
-          }
+    const handleForgotPassword = () => {
+        axios.post(`${process.env.REACT_APP_API_URL}/User/ForgetPassword?email=${email}`)
+        .then(res => {
+            console.log(res.status);
+            if (res.status === 200) {
+                setOpen(true);
+            }
+        }).catch(error => {
+            console.log(error.response.status);
+            if (error.response.status !== 200){
+                setErrorMessage(error.response.data)
+            }
+        })
+        
     }
 
-    const handleResetPassword = () => {
-        if (!passwordError) {
-        
-            console.log('New Password:', newPassword);
-            console.log('Confirmed Password:', confirmPassword);
-        } else {
-            console.log('Password error:', passwordError);
-        }
+    const handleClose = () => {
+        setOpen(false);
     };
     const handlePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -61,77 +56,31 @@ const ForgotPassword = () => {
 
     return (
         <div>
-          
-            <Grid sx={{ mt: 10 }} container>
-                <Grid md={3} xs={1}></Grid>
-                <Grid md={6} xs={10}>
+            <Grid sx={{mt:{md:7, xs:5}}} container>
+                <Grid item md={3} xs={1}></Grid>
+                <Grid item md={6} xs={10}>
                     <Typography variant='h5'>
-                        Reset Password
+                        Forgot Password
                     </Typography>
-                    <Typography sx={{ pt: 1 }}>
-                        Enter your new password and confirm it
+                    <Typography sx={{pt:1}}>
+                        Send OTP code to your email address
                     </Typography>
-                    <Box sx={{mt:0}}>
-                        <TextField
-                        sx={{ mt: 3 }}
-                        fullWidth
-                        id="outlined-new-password"
-                        label="New Password"
-                        variant="outlined"
-                        type={showPassword ? 'text' : 'password'}
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        onBlur={validateNewPassword}
-                        InputProps={{
-                            endAdornment: (
-                                <Button
-                                    onClick={handlePasswordVisibility}
-                                    sx={{ p: 0 }}
-                                >
-                                    {showPassword ? 'Hide' : 'Show'}
-                                </Button>
-                            ),
-                        }}
-                        />
-                        <TextField
-                        sx={{ mt: 3 }}
-                        fullWidth
-                        id="outlined-confirm-password"
-                        label="Confirm Password"
-                        variant="outlined"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        onBlur={validateConfirmPassword}
-                        InputProps={{
-                            endAdornment: (
-                                <Button
-                                    onClick={handleConfirmPasswordVisibility}
-                                    sx={{ p: 0 }}
-                                >
-                                    {showConfirmPassword ? 'Hide' : 'Show'}
-                                </Button>
-                            ),
-                        }}
-                        />
-                        <Typography sx={{mt:1, color:'red', visibility:invalid}}>
-                            {passwordError}
-                        </Typography> 
+                    <Box>
+                        <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' 
+                        value={email} onChange={(e) => setEmail(e.target.value)} /> 
+                        {errorMessage && (<Alert severity='error' sx={{mt: 1}}>
+                            {errorMessage}
+                        </Alert>)}
                     </Box>
                     <Stack direction="row" spacing={3} justifyContent={{lg:"flex-end", xs:"center"}}>
                         <ThemeProvider theme={primary}>
-                            <Link to='/login'>
-                                <Button sx={{mt:4, px:4, borderRadius:2}} variant='outlined' style={{color:primary}}>
-                                    Cancel
-                                </Button>
+                            <Link to='/'>
+                                <Button sx={{mt:2, px:4, borderRadius:2}} variant='outlined' style={{color:primary}}>Cancel</Button>
                             </Link>
                         </ThemeProvider>
-                        <ThemeProvider theme={secondary}>
-                            <Link to = '/login' >
+                        <ThemeProvider theme={secondary} >
                             <Box>
-                                <Button sx={{ mt:4, px: 4, borderRadius: 2 }}variant='contained' onClick={handleResetPassword}>
-                                    Submit
-                                </Button>
+                                <Button sx={{mt:2, px:4, borderRadius:2}} variant='contained' onClick={handleForgotPassword}>Submit</Button>
                             </Box>
 
                             </Link>
@@ -141,8 +90,23 @@ const ForgotPassword = () => {
                     </Stack>
                 </Grid>
             </Grid>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        Please check your email for reset password
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Ok</Button>
+                </DialogActions>
+            </Dialog>
         </div>
-    );
-};
+    )
+}
 
-export default ForgotPassword;
+export default ForgotPassword
