@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
+import jwt_decode from "jwt-decode";
 
 const secondary = createTheme({
     palette: {
@@ -28,7 +29,11 @@ const Login = () => {
             email: email,
             password: password
         }).then(res => {
-            if (res.status === 200) {
+            const decode = jwt_decode(res.data.token)
+            if (decode.role === 'Admin') {
+                login(res.data)
+                navigate('/dashboard-admin')
+            } else {
                 login(res.data)
                 navigate('/')
             }

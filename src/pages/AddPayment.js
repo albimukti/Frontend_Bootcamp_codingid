@@ -37,6 +37,7 @@ const AddPayment = () => {
             isActivated: active
         })
         .then(navigate('/dashboard-admin/manage-payment'))
+        window.location.reload()
     }
 
     return (

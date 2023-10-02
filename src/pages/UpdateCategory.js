@@ -68,6 +68,7 @@ const UpdateCategory = () => {
             isActivated: active
         })
         .then(navigate('/dashboard-admin'))
+        window.location.reload()
     }
 
     return (

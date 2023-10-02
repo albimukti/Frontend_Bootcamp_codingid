@@ -2,15 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { Typography, Box, Stack } from '@mui/material'
 import useAuth from '../hooks/useAuth';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const MyClass = () => {
   const [myClass, setMyClass] = useState([])
-  const { payload } = useAuth()
-  axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+  const { payload, isLoggedIn } = useAuth()
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     getMyClass()
-  }, [])
+      if (isLoggedIn) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+      } else {
+          return navigate('/login')
+      }
+  }, [isLoggedIn])
 
   const getMyClass = () => {
     axios.get(process.env.REACT_APP_API_URL + '/OrderDetail/GetMyClass')

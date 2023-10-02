@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Typography, Box, Button } from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { styled } from '@mui/material/styles';
@@ -56,12 +56,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   
 const Invoice = () => {
   const [dataOrder, setDataOrder] = useState([])
-  const { payload } = useAuth()
-  axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+  const { payload, isLoggedIn } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     getInvoiceByIdUser()
-  }, [])
+    if (isLoggedIn) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+    } else {
+      return navigate('/login')
+    }
+  }, [isLoggedIn])
 
   const getInvoiceByIdUser = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrdersByIdUser`)

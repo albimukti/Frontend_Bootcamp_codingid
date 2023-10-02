@@ -31,14 +31,14 @@ const DetailKelas = () => {
 
     const { typeName, title} = useParams()
     const navigate = useNavigate()
-    const { payload } = useAuth()
+    const { payload, isLoggedIn } = useAuth()
     
 
     useEffect(() => {
         window.scrollTo(0, 0)
         course()
         menuFood()
-    }, [title])
+    }, [title, isLoggedIn])
 
     const course = () => {
         axios.get(`${process.env.REACT_APP_API_URL}/Menu/GetMenuByTitle?title=${title}`)
@@ -155,10 +155,14 @@ const DetailKelas = () => {
                         </FormControl>
                         <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
-                                <Button sx={{px:5, borderRadius:2}} variant='outlined' onClick={() => addCart(schedule, true)}>Add to Cart</Button>
+                                <Button sx={{px:5, borderRadius:2}} variant='outlined' disabled={!isLoggedIn} onClick={() => addCart(schedule, true)}>
+                                    Add to Cart
+                                </Button>
                             </ThemeProvider>
                             <ThemeProvider theme={secondary}>
-                                <Button sx={{px:7, borderRadius:2, color:primary}} variant='contained' onClick={() => addCart(schedule, false)}>Buy Now</Button>
+                                <Button sx={{px:7, borderRadius:2, color:primary}} variant='contained' disabled={!isLoggedIn} onClick={() => addCart(schedule, false)}>
+                                    Buy Now
+                                </Button>
                             </ThemeProvider>
                         </Stack>
                     </Grid>

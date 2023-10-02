@@ -20,6 +20,7 @@ const AddUser = () => {
             isActivated: false
         })
         .then(navigate('/dashboard-admin/manage-user'))
+        window.location.reload()
     }
 
     return (

@@ -28,26 +28,21 @@ const primary = createTheme({
     },
   });
 
-// const payments = [
-//   {type : 'Gopay', image : 'Gopay.png'},
-//   {type : 'Ovo', image : 'Ovo.png'},
-//   {type : 'Dana', image : 'Dana.png'},
-//   {type : 'Mandiri', image : 'Mandiri.png'},
-//   {type : 'BCA', image : 'BCA.png'},
-//   {type : 'BNI', image : 'BNI.png'}
-// ]
-
 const PaymentMethod = (props) => {
   const { onClose, selectedValue, open, totalPrice, totalCourse, orderDetail } = props;
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [selectedPayment, setSelectedPayment] = useState()
   const [paymentItem, setPaymentItem] = useState([])
   const navigate = useNavigate()
-  const { payload } = useAuth()
-  axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+  const { payload, isLoggedIn } = useAuth()
 
   useEffect(() => {
     payments()
+    if (isLoggedIn) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+    } else {
+      return navigate('/login')
+    }
   },[])
 
   const payments = () => {
@@ -64,20 +59,6 @@ const PaymentMethod = (props) => {
     setSelectedIndex(index)
     setSelectedPayment(value)
   };
-  
-  const scheduleConvert = (date) => {
-
-    // Pisahkan tanggal dan waktu menggunakan spasi
-    var parts = date.split(" ");
-
-    // Pisahkan tanggal menjadi bagian-bagian
-    var tanggalParts = parts[0].split("/");
-
-    // Reformat tanggal menjadi format yang diinginkan (YYYY-MM-DD)
-    var schedule = tanggalParts[2] + "-" + tanggalParts[1] + "-" + tanggalParts[0];
-
-    return schedule// Output: 2022-07-27
-  }
 
   const handleCheckout = async () => {
     const createOrder = {

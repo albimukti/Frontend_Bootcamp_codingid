@@ -8,6 +8,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PaymentMethod from '../components/PaymentMethod';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 
 const primary = createTheme({
@@ -33,12 +34,18 @@ const Checkout = () => {
     const [totalPrice, settotalPrice] = useState(0)
     const [course, setCourse] = useState(0)
     const [dataOrder, setDataOrder] = useState([])
-    const { payload } = useAuth()
-    axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+    const { payload, isLoggedIn } = useAuth()
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         cartView()
-    },[isItemDeleted])
+        if (isLoggedIn) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+        } else {
+            return navigate('/login')
+        }
+    },[isItemDeleted, isLoggedIn])
 
     const cartView = async () => {
         axios.get(process.env.REACT_APP_API_URL + `/Cart/GetCartByIdUser`)
@@ -192,7 +199,9 @@ const Checkout = () => {
                 </Stack>
                 <Box>
                     <ThemeProvider theme={secondary}>
-                        <Button sx={{px:{sm:4, xs:2}, borderRadius:2, color:primary}} variant='contained' onClick={handleClickOpen}>Pay Now</Button>
+                        <Button sx={{px:{sm:4, xs:2}, borderRadius:2, color:primary}} variant='contained' disabled={course === 0} onClick={handleClickOpen}>
+                            Pay Now
+                        </Button>
                     </ThemeProvider>
                 </Box>
             </Box>

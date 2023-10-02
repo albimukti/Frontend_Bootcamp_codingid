@@ -85,6 +85,7 @@ const UpdateCourse = () => {
             isActivated: active
         })
         .then(navigate('/dashboard-admin/manage-course'))
+        window.location.reload()
     }
 
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Typography, Box, TableContainer, Table, TableHead, TableBody, TableRow} from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
@@ -7,6 +7,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Footer from '../components/Footer';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -31,13 +32,20 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const DetailInvoice = () => {
   const [dataInvoice, setDataInvoice] = useState([])
   const [dataOrder, setDataOrder] = useState([])
+  const { isLoggedIn, payload } = useAuth()
 
   const { id } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     getDataOrder()
     getDataInvoice()
-  }, [])
+    if (isLoggedIn) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
+    } else {
+      return navigate('/login')
+    }
+  }, [isLoggedIn])
 
   const getDataOrder = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/Order/GetOrderById?id_order=${id}`)

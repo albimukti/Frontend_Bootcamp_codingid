@@ -47,7 +47,18 @@ const Register = () => {
             role: "User",
             isActivated: false
         })
-        setOpen(true)
+        .then(res => {
+            if (res.status === 200) {
+                setOpen(true)
+            }
+        })
+        .catch(error => {
+            if (error.response.status !== 200){
+                setErrorMessage(error.response.data)
+                setActiveError(true)
+            }
+        })
+        
     }
 
     const handleClose = () => {

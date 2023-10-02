@@ -24,6 +24,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useAuth from '../hooks/useAuth';
 import jwt_decode from "jwt-decode";
 import ValidateAdmin from './ValidateAdmin';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const drawerWidth = 240;
 
@@ -39,9 +40,18 @@ const DashboardAdmin = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { isLoggedIn, logout, payload } = useAuth()
+  const { logout, payload } = useAuth()
 
-  const decode = jwt_decode(payload.token)
+  let roles = null
+
+  const decode = () => {
+    if (payload !== null) {
+      roles = jwt_decode(payload.token)
+      return roles
+    } else {
+      return {role : "Unknow"}
+    }
+  }
 
   const navigate = useNavigate()
 
@@ -51,7 +61,7 @@ const DashboardAdmin = (props) => {
 
   const handleLogout = () => {
     logout()
-    navigate('/login-admin')
+    navigate('/login')
   }
 
   const drawer = (
@@ -60,7 +70,7 @@ const DashboardAdmin = (props) => {
         <IconButton size='large' edge='start' aria-label='logo'>
           <img src='/images/logo.png' height={'40px'} alt='logo'/>
         </IconButton>
-        {decode.name}
+        {decode().role === 'Admin' ? jwt_decode(payload.token).name : null}
       </Toolbar>
       <Divider />
       <List>
@@ -78,6 +88,14 @@ const DashboardAdmin = (props) => {
               <RestaurantMenuIcon/>
             </ListItemIcon>
             <ListItemText primary={'Course'} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('manage-schedule')}>
+            <ListItemIcon>
+              <EventNoteIcon/>
+            </ListItemIcon>
+            <ListItemText primary={'Schedule'} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -118,7 +136,7 @@ const DashboardAdmin = (props) => {
   
   return (
     <>
-      {decode.role === "Admin" ?
+      {decode().role === "Admin" ?
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar

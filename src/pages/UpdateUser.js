@@ -46,6 +46,7 @@ const UpdateUser = () => {
             isActivated: active
         })
         .then(navigate('/dashboard-admin/manage-user'))
+        window.location.reload()
     }
 
     return (

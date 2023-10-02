@@ -39,6 +39,7 @@ const AddCategory = () => {
             isActivated: active
         })
         .then(navigate('/dashboard-admin'))
+        window.location.reload()
     }
 
     return (
