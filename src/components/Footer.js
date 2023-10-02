@@ -9,7 +9,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
-    const [kelas, setKelas] = useState([])
+    const [kelas, setKelas] = useState()
 
     useEffect(() => {
         course()
@@ -32,10 +32,10 @@ const Footer = () => {
                         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
                     </Typography>
                 </Grid>
-                <Grid item md={4} sm={6} xs={12} sx={{mt:{xs:4, sm:0}}}>
+                <Grid item lg={4}>
                     <Typography sx={{color:'#FABC1D', fontWeight:'bold'}}>Product</Typography>
                     <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item lg={6}>
                         <ul>
                         {kelas && kelas.map((list, index) => {
                             if (index < 4) {
