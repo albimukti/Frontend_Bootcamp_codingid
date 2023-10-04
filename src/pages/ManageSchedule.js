@@ -64,7 +64,7 @@ const ManageSchedule = () => {
 
   return (
     <div>
-      <Typography variant="h5">Manage Course</Typography>
+      <Typography variant="h5">Manage Schedule</Typography>
 
       <TableContainer sx={{mt:3}} component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="simple table">

@@ -40,7 +40,7 @@ const Body = () => {
 
     return (
         <div>
-            <Grid container columnSpacing={8} rowSpacing={4} sx={{mt:{md:7, xs:2}, px:{md:20, xs:10}}}>
+            <Grid container columnSpacing={8} rowSpacing={4} sx={{mt:{md:7, xs:2}, px:{md:20, xs:5}}}>
                 <Grid item lg={4} xs={12}>
                     <Card sx={{border:1, borderColor:'grey.400', borderRadius:3}}>
                         <CardContent sx={{display:'flex', flexDirection:'column', alignItems:'center'}}>
@@ -82,11 +82,11 @@ const Body = () => {
                 </Grid>
             </Grid>
             <Box sx={{display:'flex', justifyContent:'center', flexDirection:'row', pb:4}} color='#5B4947'>
-                <Typography variant='h4' sx={{mt:9, fontWeight:'bold'}}>
+                <Typography variant='h4' sx={{mt:9, fontWeight:'bold', textAlign:'center'}}>
                     More professional class
                 </Typography>
             </Box>
-            <Box sx={{px:10, py:6}}>
+            <Box sx={{px:{md:10, xs:5}, py:6}}>
                 <Grid container spacing={5}>
                     {limit && limit.map((list, index) => (
                             <Grid item md={4} xs={12} key={index}>
@@ -108,7 +108,7 @@ const Body = () => {
                 </Grid>
             </Box>
             <Box sx={{backgroundImage: "url('/images/Soup Image/image 4.png')", backgroundSize:'cover', backgroundPosition:'center'}}>
-                <Stack sx={{px:10}} textAlign={'justify'} color={'white'}>
+                <Stack sx={{px:{md:10, xs:5}}} textAlign={'justify'} color={'white'}>
                     <Typography variant='h3' sx={{mt:9, textAlign:{sm:'justify',xs:'left'}}}>
                         Gets your best benefit
                     </Typography>
@@ -117,7 +117,7 @@ const Body = () => {
                     </Typography>
                 </Stack>
             </Box>
-            <Box sx={{p:10}}>
+            <Box sx={{p:{md:10, xs:5}}}>
                 <Grid container spacing={5}>
                     {type && type.map((list) => (
                         <Grid item lg={3} md={4} sm={6} xs={12} key={list.id_type}>

@@ -45,14 +45,6 @@ const ForgotPassword = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    const handlePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-    const handleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword(!showConfirmPassword);
-    };
-
-    
 
     return (
         <div>
@@ -68,7 +60,8 @@ const ForgotPassword = () => {
                     <Box>
                         <TextField sx={{mt:3}} fullWidth id="outlined-basic" label="Email" variant="outlined" type='email' 
                         value={email} onChange={(e) => setEmail(e.target.value)} /> 
-                        {errorMessage && (<Alert severity='error' sx={{mt: 1}}>
+                        {errorMessage && 
+                        (<Alert severity='error' sx={{mt: 1}}>
                             {errorMessage}
                         </Alert>)}
                     </Box>
@@ -82,10 +75,6 @@ const ForgotPassword = () => {
                             <Box>
                                 <Button sx={{mt:2, px:4, borderRadius:2}} variant='contained' onClick={handleForgotPassword}>Submit</Button>
                             </Box>
-
-                            </Link>
-                           
-                                
                         </ThemeProvider>
                     </Stack>
                 </Grid>

@@ -37,11 +37,12 @@ const ListMenuKelas = () => {
     return (
         <div>
             {type && <Box sx={{backgroundImage: `url('${`data:image/png;base64,${type.image}`}')`, backgroundSize:'cover', backgroundPosition:'center', height:'310px'}}></Box>}
-            {type && <Box sx={{py:6, px:10, borderBottom:1, borderColor:'grey.400'}}>
+            {type && 
+            <Box sx={{py:6, px:{md:10, xs:5}, borderBottom:1, borderColor:'grey.400'}}>
                 <Typography variant='h4' sx={{fontWeight:'bold'}}>{type.type_name}</Typography>
                 <Typography sx={{py:2, textAlign:'justify'}}>{type.description}</Typography>
             </Box>}
-            <Box sx={{py:8, px:10}}>
+            <Box sx={{py:8, px:{md:10, xs:5}}}>
                 <Typography variant='h4' sx={{textAlign:'center', fontWeight:'bold', color:'#5B4947', pb:8}}>Another menu in this class</Typography>
                 <Box>
                     <Grid container spacing={5}>

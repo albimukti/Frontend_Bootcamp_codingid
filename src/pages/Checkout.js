@@ -39,12 +39,12 @@ const Checkout = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        cartView()
         if (isLoggedIn) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
         } else {
             return navigate('/login')
         }
+        cartView()
     },[isItemDeleted, isLoggedIn])
 
     const cartView = async () => {
@@ -171,11 +171,11 @@ const Checkout = () => {
     return (
         <div style={{position:'relative'}}>
             <Box>
-                {dataOrder && dataOrder.map((item) => (
-                    <Typography>{item.id_menu}</Typography>
+                {dataOrder && dataOrder.map((item, index) => (
+                    <Typography key={index}>{item.id_menu}</Typography>
                 ))}
             </Box>
-            <Box sx={{pt:4, px:{sm:10, xs:5}, mb:15}}>
+            <Box sx={{pt:{md:4, xs:2}, px:{md:8, xs:3}, mb:15}}>
                 <Box sx={{borderBottom:3, borderColor:'grey.300', py:1}}>
                     <FormControlLabel
                         label="Pilih Semua"
@@ -190,8 +190,8 @@ const Checkout = () => {
                 {children}
             </Box>
             <Box sx={{position:'fixed', width:'100vw', boxSizing:'border-box', 
-            bottom:0, py:3, px:{sm:10, xs:5}, display:'flex', justifyContent: 'space-between', borderTop:3, borderColor:'grey.300', backgroundColor:'white'}}>
-                <Stack direction='row' spacing={3}>
+            bottom:0, py:3, px:{md:8, xs:2}, display:'flex', justifyContent: 'space-between', borderTop:3, borderColor:'grey.300', backgroundColor:'white'}}>
+                <Stack direction='row' spacing={2}>
                     <Typography sx={{fontSize:{sm:'1.2rem', xs:'1.1rem'}, pt:1}}>Total Price</Typography>
                     <Typography sx={{color:'#FABC1D', fontWeight:'bold', fontSize:{sm:'1.2rem', xs:'1.1rem'}, pt:1}}>
                         {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalPrice)}

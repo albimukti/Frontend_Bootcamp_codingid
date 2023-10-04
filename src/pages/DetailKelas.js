@@ -126,7 +126,7 @@ const DetailKelas = () => {
     <div>
         <Box>
         {kelas && 
-            <Box sx={{pt:8, px:10}}>
+            <Box sx={{pt:{md:8, xs:4}, px:{md:10, xs:5}}}>
                 <Grid container>
                     <Grid item xs={12} md={4}>
                         <Card>
@@ -139,7 +139,7 @@ const DetailKelas = () => {
                         <Typography sx={{color:'#5B4947', pt:1, fontWeight:'bold'}} variant='h5'>
                             {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(kelas.price)}
                         </Typography>
-                        <FormControl sx={{width:'18rem', mt:4}}>
+                        <FormControl sx={{width:{md:'18rem', xs:'100%'}, mt:4}}>
                             <InputLabel id="demo-simple-select-label">Select Schedule</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
@@ -153,7 +153,7 @@ const DetailKelas = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                        <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{lg:8, xs:4}}}>
+                        <Stack direction={{lg:'row', xs:'column'}} spacing={2} sx={{mt:{md:8, xs:4}}}>
                             <ThemeProvider theme={primary}>
                                 <Button sx={{px:5, borderRadius:2}} variant='outlined' disabled={!isLoggedIn} onClick={() => addCart(schedule, true)}>
                                     Add to Cart
@@ -169,13 +169,12 @@ const DetailKelas = () => {
                 </Grid>
             </Box>}
             {kelas &&
-            <Box sx={{ px:10, py:4, borderBottom:1, borderColor:'grey.400'}}>
+            <Box sx={{ px:{md:10, xs:5}, py:4, borderBottom:1, borderColor:'grey.400'}}>
                 <Typography variant='h4' sx={{fontWeight:'bold'}}>Description</Typography>
-                <Typography sx={{py:2, textAlign:'justify'}}>{kelas.description}</Typography>
                 <Typography sx={{py:2, textAlign:'justify'}}>{kelas.description}</Typography>
             </Box>}
 
-            <Box sx={{py:8, px:10}}>
+            <Box sx={{py:8, px:{md:10, xs:5}}}>
                     <Typography variant='h4' sx={{textAlign:'center', fontWeight:'bold', color:'#5B4947', pb:8}}>Another menu in this class</Typography>
                     <Box>
                         <Grid container spacing={5}>
