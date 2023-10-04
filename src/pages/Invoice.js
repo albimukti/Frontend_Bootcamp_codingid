@@ -60,12 +60,12 @@ const Invoice = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getInvoiceByIdUser()
     if (isLoggedIn) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
     } else {
       return navigate('/login')
     }
+    getInvoiceByIdUser()
   }, [isLoggedIn])
 
   const getInvoiceByIdUser = () => {
@@ -103,7 +103,7 @@ const Invoice = () => {
 
     return (
         <div>
-            <Box sx={{pt:4, px:10, mb:20}}>
+            <Box sx={{pt:{md:4, xs:2}, px:{md:10, xs:5}, mb:20}}>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     {breadcrumbs}
                 </Breadcrumbs>

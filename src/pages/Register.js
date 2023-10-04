@@ -48,7 +48,7 @@ const Register = () => {
             isActivated: false
         })
         .then(res => {
-            if (res.status === 200) {
+            if (res.status === 201) {
                 setOpen(true)
             }
         })

@@ -24,7 +24,7 @@ const Footer = () => {
     }
     
     return (
-        <Box sx={{px:10, py:5, backgroundColor:'#5B4947'}}>
+        <Box sx={{px:{md:10, xs:5}, py:5, backgroundColor:'#5B4947'}}>
             <Grid container spacing={{sm:10}}>
                 <Grid item md={4} sm={6} xs={12}>
                     <Typography sx={{color:'#FABC1D', fontWeight:'bold'}}>About Us</Typography>
@@ -32,13 +32,13 @@ const Footer = () => {
                         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
                     </Typography>
                 </Grid>
-                <Grid item md={4} sm={6} xs={12} sx={{mt:{xs:4, sm:0}}}>
+                <Grid item md={4} sm={6} xs={12} sx={{mt:{xs:2, sm:0}}}>
                     <Typography sx={{color:'#FABC1D', fontWeight:'bold'}}>Product</Typography>
                     <Grid container>
                         <Grid item sm={6}>
                         <ul>
                         {kelas && kelas.map((list, index) => {
-                            if (index < 4) {
+                            if (index < kelas.length / 2) {
                             return (
                                 <Link to={`/list-menu-kelas/${list.type_name}`} style={{ textDecoration: 'none' }} key={index}>
                                 <li style={{ color: 'white', paddingBottom: 10 }}>{list.type_name}</li>
@@ -54,7 +54,7 @@ const Footer = () => {
                         <Grid item sm={6}>
                         <ul>
                             {kelas && kelas.map((list, index) => {
-                                if(index >= 4) return (
+                                if(index >= kelas.length / 2) return (
                                     <Link to = {`/list-menu-kelas/${list.type_name}`} style={{textDecoration:'none'}} key={index}>
                                         <li style={{color:'white', paddingBottom:10}}>{list.type_name}</li>
                                     </Link>
@@ -67,13 +67,13 @@ const Footer = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item md={4} sm={6} xs={12} sx={{mt:{xs:4, sm:0}}}>
+                <Grid item md={4} sm={6} xs={12} sx={{mt:{xs:2, sm:0}}}>
                     <Typography sx={{color:'#FABC1D', fontWeight:'bold'}}>Address</Typography>
                     <Typography sx={{color:'white', py:2, textAlign:'justify'}}>
                         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque.
                     </Typography>
-                    <Typography sx={{color:'#FABC1D', fontWeight:'bold', mt:{xs:4, sm:0}}}>Contact Us</Typography>
-                    <Stack direction='row' spacing={2} sx={{mt:2}}>
+                    <Typography sx={{color:'#FABC1D', fontWeight:'bold', mt:{xs:2, sm:0}}}>Contact Us</Typography>
+                    <Stack direction='row' justifyContent='space-around' sx={{mt:2}}>
                         <Box sx={{backgroundColor:'#FABC1D',p:{lg:1.5, xs:1.3,}, borderRadius:10}}>
                             <PhoneIcon sx={{color:'#5B4947'}}/>
                         </Box>

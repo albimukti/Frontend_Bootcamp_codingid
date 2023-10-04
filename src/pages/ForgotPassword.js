@@ -29,12 +29,10 @@ const ForgotPassword = () => {
     const handleForgotPassword = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/User/ForgetPassword?email=${email}`)
         .then(res => {
-            console.log(res.status);
             if (res.status === 200) {
                 setOpen(true);
             }
         }).catch(error => {
-            console.log(error.response.status);
             if (error.response.status !== 200){
                 setErrorMessage(error.response.data)
             }

@@ -11,12 +11,12 @@ const MyClass = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getMyClass()
       if (isLoggedIn) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${payload.token}`
       } else {
           return navigate('/login')
       }
+      getMyClass()
   }, [isLoggedIn])
 
   const getMyClass = () => {
@@ -43,16 +43,19 @@ const MyClass = () => {
 
   return (
     <div>
+      <Box>
         {myClass && myClass.map((list, index) => (
-          <Stack sx={{borderBottom:3, borderColor:'grey.300', mx:10, py:5}} direction='row' key={index}>
+          <Stack sx={{borderBottom:3, borderColor:'grey.300', px:{md:10, xs:5}, py:5}} direction={{sm:'row', xs:'column'}} key={index}>
             <Box component='img' sx={{height:'140px'}} src={`data:image/png;base64,${list.image}`}/>
-            <Box sx={{px:3}}>
-                <Typography sx={{pb:1}}>{list.type_name}</Typography>
+            <Box sx={{px:{md:3, xs:0}}}>
+                <Typography sx={{py:1}}>{list.type_name}</Typography>
                 <Typography variant='h5' sx={{fontWeight:'bold', pb:1}}>{list.title}</Typography>
                 <Typography variant='h6' sx={{color:'#FABC1D', pb:1, fontWeight:'bold'}}>{formatDate(list.date)}</Typography>
             </Box>
           </Stack>
         ))}
+      </Box>
+        
     </div>
   )
 }

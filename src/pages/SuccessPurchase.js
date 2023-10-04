@@ -24,14 +24,14 @@ const SuccessPurchase = () => {
 
     return (
         <div>
-            <Grid sx={{mt:10}} container>
-                <Grid md={3} xs={1}></Grid>
-                <Grid md={6} mdOffset={3} xs={10}>
-                    <Stack alignItems='center'>
-                    <img src='/images/success.png' width={'250px'} alt='Success Register'/>
-                    <Typography sx={{mt:3}}>Purchase Successfully</Typography>
-                    <Typography sx={{mt:1}}>Horay!! Let’s cook and become a professional cheff</Typography>
-                    <Stack  sx={{mt:4}} direction='row' spacing={2}>
+            <Grid sx={{mt:{md:10, xs:5}}} container>
+                <Grid item md={3} xs={1}></Grid>
+                <Grid item md={6} xs={10}>
+                  <Stack alignItems='center'>
+                      <img src='/images/success.png' width={'250px'} alt='Success Register'/>
+                      <Typography sx={{mt:3, textAlign:'center'}}>Purchase Successfully</Typography>
+                      <Typography sx={{mt:1, textAlign:'center'}}>Horay!! Let’s cook and become a professional cheff</Typography>
+                      <Stack  sx={{mt:4}} direction={{md:'row', xs:'column'}} spacing={2}>
                         <ThemeProvider theme={primary}>
                             <Link to='/'>
                             <Button sx={{px:{sm:3, xs:2}, py:1.5, borderRadius:2}} variant='outlined'>
@@ -49,7 +49,7 @@ const SuccessPurchase = () => {
                             </Link>
                         </ThemeProvider>
                     </Stack>
-                    </Stack>
+                  </Stack>
                 </Grid>
             </Grid>
         </div>

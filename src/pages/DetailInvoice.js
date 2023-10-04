@@ -91,7 +91,7 @@ const DetailInvoice = () => {
 
     return (
         <div>
-            <Box sx={{pt:4, px:10, mb:20}}>
+            <Box sx={{pt:{md:4, xs:2}, px:{md:10, xs:5}, mb:20}}>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     {breadcrumbs}
                 </Breadcrumbs>
