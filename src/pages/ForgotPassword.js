@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Grid, Typography, TextField, Stack, Button, Box, Alert, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ForgotPassword = () => {
 
@@ -25,17 +26,19 @@ const ForgotPassword = () => {
     const [email, setEmail] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const handleForgotPassword = () => {
+        setLoading(true)
         axios.post(`${process.env.REACT_APP_API_URL}/User/ForgetPassword?email=${email}`)
         .then(res => {
-            console.log(res.status);
             if (res.status === 200) {
+                setLoading(false)
                 setOpen(true);
             }
         }).catch(error => {
-            console.log(error.response.status);
             if (error.response.status !== 200){
+                setLoading(false)
                 setErrorMessage(error.response.data)
             }
         })
@@ -79,6 +82,11 @@ const ForgotPassword = () => {
                     </Stack>
                 </Grid>
             </Grid>
+            {loading && (
+                <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                    <CircularProgress />
+                </Box>
+            )}
             <Dialog
                 open={open}
                 onClose={handleClose}

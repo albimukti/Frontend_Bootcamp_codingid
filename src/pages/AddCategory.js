@@ -2,12 +2,14 @@ import { Box, MenuItem, Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AddCategory = () => {
     const [typeName, setTypeName] = useState()
     const [description, setDescription] = useState()
     const [image, setImage] = useState()
     const [active, setActive] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -32,14 +34,19 @@ const AddCategory = () => {
     };
 
     const addNew = () => {
+        setLoading(true)
         axios.post(process.env.REACT_APP_API_URL + '/Type/CreateType', {
             type_name: typeName,
             description: description,
             image: image,
             isActivated: active
         })
-        .then(navigate('/dashboard-admin'))
-        window.location.reload()
+        .then(res => {
+            if (res.status === 201) {
+                setLoading(false)
+                navigate('/dashboard-admin')
+            }
+        })
     }
 
     return (
@@ -83,6 +90,11 @@ const AddCategory = () => {
                     </TextField>
                 </Box>
                 <Button sx={{ mt: 3, px: 5, borderRadius: 2 }} variant='contained' onClick={addNew}>Save</Button>
+                {loading && (
+                    <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                        <CircularProgress />
+                    </Box>
+                )}
             </Box>
         </div>
     )

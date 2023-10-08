@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const green = createTheme({
     palette: {
@@ -21,6 +22,7 @@ const UpdateCourse = () => {
     const [description, setDescription] = useState()
     const [active, setActive] = useState(null)
     const [allType, setAllType] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const { id } = useParams()
     const navigate = useNavigate()
@@ -76,6 +78,7 @@ const UpdateCourse = () => {
     };
 
     const updateData = () => {
+        setLoading(true)
         axios.put(process.env.REACT_APP_API_URL + `/Menu/UpdateMenu?Id_menu=${id}`, {
             title: course,
             description: description,
@@ -84,8 +87,12 @@ const UpdateCourse = () => {
             fk_id_type: category,
             isActivated: active
         })
-        .then(navigate('/dashboard-admin/manage-course'))
-        window.location.reload()
+        .then(res => {
+            if (res.status === 204) {
+                setLoading(false)
+                navigate('/dashboard-admin/manage-course')
+            }
+        })
     }
 
     return (
@@ -157,6 +164,11 @@ const UpdateCourse = () => {
                     <ThemeProvider theme={green}>
                         <Button sx={{ mt: 3, px: 4, borderRadius: 2 }} variant='contained' onClick={updateData}>Save</Button>
                     </ThemeProvider>
+                    {loading && (
+                        <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                            <CircularProgress />
+                        </Box>
+                    )}
                 </Box>
                 
             }

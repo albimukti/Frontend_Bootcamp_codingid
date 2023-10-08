@@ -9,6 +9,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const secondary = createTheme({
     palette: {
@@ -42,6 +43,7 @@ const ScheduleCourse = () => {
     const [allSchedule, setAllSchedule] = useState([])
     const [updated, setUpdated] = useState(false)
     const [scheduledate, setScheduledate] = useState();
+    const [loading, setLoading] = useState()
 
     const navigate = useNavigate()
 
@@ -64,15 +66,25 @@ const ScheduleCourse = () => {
             date: Date,
             fk_id_menu: id,
             isActivated: IsActivated
-        }).then(setUpdated(!updated))
+        }).then(res => {
+            if (res.status === 204){
+                setUpdated(!updated)
+            }
+        })
     }
 
     const addSchedule = () => {
+        setLoading(true)
         axios.post(process.env.REACT_APP_API_URL + `/Schedule/AddSchedule`, {
             date: handleScheduledateChange(scheduledate),
             fk_id_menu: id,
             isActivated: true
-        }).then(setUpdated(!updated))
+        }).then(res => {
+            if (res.status === 201) {
+                setLoading(false)
+                setUpdated(!updated)
+            }
+        })
     }
 
     const handleScheduledateChange = (date) => {
@@ -103,6 +115,11 @@ const ScheduleCourse = () => {
             <Typography variant='h5' sx={{fontWeight:'bold', textAlign:'center'}}>
                 {`${name}`}
             </Typography>
+            {loading && (
+                <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                    <CircularProgress />
+                </Box>
+            )}
             <Box sx={{display:'flex', flexDirection:'row', mt:3}}>
                 <Typography sx={{mr:1.5}} variant='h6'>
                     Add New Schedule

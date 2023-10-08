@@ -3,6 +3,7 @@ import { Typography, TextField, Grid, Button, Stack, Alert, Dialog, DialogConten
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const secondary = createTheme({
     palette: {
@@ -19,6 +20,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const validateInput = () => {
         let at = email.indexOf("@");
@@ -36,6 +38,7 @@ const Register = () => {
     }
 
     const handleRegister = () => {
+        setLoading(true)
         axios.post(process.env.REACT_APP_API_URL + '/User/CreateUser', {
             name: nama,
             email: email,
@@ -45,12 +48,14 @@ const Register = () => {
         })
         .then(res => {
             if (res.status === 201) {
+                setLoading(false)
                 setErrorMessage('')
                 setOpen(true)
             }
         })
         .catch(error => {
             if (error.response.status !== 200){
+                setLoading(false)
                 setErrorMessage(error.response.data)
             }
         })
@@ -95,12 +100,17 @@ const Register = () => {
                             <Button sx={{mt:4, px:4, borderRadius:2}} variant='contained' onClick={validateInput}>Sign up</Button>
                         </ThemeProvider>
                     </Stack>
-                    <Typography sx={{mt:{md:7, xs:5}}} align='center'>
+                    <Typography sx={{mt:{md:3, xs:2}}} align='center'>
                         Have account?
                         <Link to='/login' style={{textDecoration:'none', color:'#2F80ED'}}> Login here</Link>
                     </Typography>
                 </Grid>
             </Grid>
+            {loading && (
+                <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                    <CircularProgress />
+                </Box>
+            )}
             <Dialog
                 open={open}
                 onClose={handleClose}
