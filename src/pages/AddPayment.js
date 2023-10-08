@@ -2,11 +2,13 @@ import { Box, MenuItem, Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AddPayment = () => {
     const [paymentName, setPaymentName] = useState()
     const [logo, setLogo] = useState()
     const [active, setActive] = useState()
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -31,13 +33,18 @@ const AddPayment = () => {
     };
 
     const addNew = () => {
+        setLoading(true)
         axios.post(process.env.REACT_APP_API_URL + '/Payment/AddPaymentMethod', {
             payment_name: paymentName,
             logo: logo,
             isActivated: active
         })
-        .then(navigate('/dashboard-admin/manage-payment'))
-        window.location.reload()
+        .then(res => {
+            if (res.status === 201) {
+                setLoading(false)
+                navigate('/dashboard-admin/manage-payment')
+            }
+        })
     }
 
     return (
@@ -69,6 +76,11 @@ const AddPayment = () => {
                 </Box>
             </Box>
             <Button sx={{ mt: 3, px: 5, borderRadius: 2 }} variant='contained' onClick={addNew}>Save</Button>
+            {loading && (
+                <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                    <CircularProgress />
+                </Box>
+            )}
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const green = createTheme({
     palette: {
@@ -16,6 +17,7 @@ const UpdatePayment = () => {
     const [paymentName, setPaymentName] = useState()
     const [logo, setLogo] = useState()
     const [active, setActive] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const { id } = useParams()
     const navigate = useNavigate()
@@ -57,13 +59,18 @@ const UpdatePayment = () => {
     };
     
     const updateData = () => {
+        setLoading(true)
         axios.put(process.env.REACT_APP_API_URL + `/Payment/UpdatePayment?Id_payment=${id}`, {
             payment_name: paymentName,
             logo: logo,
             isActivated: active
         })
-        .then(navigate('/dashboard-admin/manage-payment'))
-        window.location.reload()
+        .then(res => {
+            if (res.status === 204) {
+                setLoading(false)
+                navigate('/dashboard-admin/manage-payment')
+            }
+        })
     }
 
     return (
@@ -103,8 +110,12 @@ const UpdatePayment = () => {
                     <ThemeProvider theme={green}>
                         <Button sx={{ mt: 3, px: 5, borderRadius: 2 }} variant='contained' onClick={updateData}>Save</Button>
                     </ThemeProvider>
+                    {loading && (
+                        <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                            <CircularProgress />
+                        </Box>
+                    )}
                 </Box>
-                
             }
         </div>
     )

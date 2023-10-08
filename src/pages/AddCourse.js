@@ -2,6 +2,8 @@ import { Box, MenuItem, Button, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const AddCourse = () => {
     const [category, setCategory] = useState()
@@ -11,6 +13,7 @@ const AddCourse = () => {
     const [description, setDescription] = useState()
     const [active, setActive] = useState(null)
     const [allType, setAllType] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -44,6 +47,7 @@ const AddCourse = () => {
     };
 
     const addNew = () => {
+        setLoading(true)
         axios.post(process.env.REACT_APP_API_URL + '/Menu/CreateMenu', {
             title: course,
             description: description,
@@ -52,8 +56,12 @@ const AddCourse = () => {
             fk_id_type: category,
             isActivated: active
         })
-        .then(navigate('/dashboard-admin/manage-course'))
-        window.location.reload()
+        .then(res => {
+            if (res.status === 201) {
+                setLoading(false)
+                navigate('/dashboard-admin/manage-course')
+            }
+        })
     }
 
     return (
@@ -121,6 +129,11 @@ const AddCourse = () => {
                         </TextField>
                     </Box>
                     <Button sx={{ mt: 3, px: 5, borderRadius: 2 }} variant='contained' onClick={addNew}>Save</Button>
+                    {loading && (
+                        <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                            <CircularProgress />
+                        </Box>
+                    )}
                 </Box>
             }
         </div>

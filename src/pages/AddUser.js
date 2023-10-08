@@ -2,16 +2,19 @@ import { Box, MenuItem, Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AddUser = () => {
     const [name, setName] = useState()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [role, setRole] = useState()
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
     const addNew = () => {
+        setLoading(true)
         axios.post(process.env.REACT_APP_API_URL + '/User/CreateUser', {
             name: name,
             email: email,
@@ -19,8 +22,12 @@ const AddUser = () => {
             role: "User",
             isActivated: false
         })
-        .then(navigate('/dashboard-admin/manage-user'))
-        window.location.reload()
+        .then(res => {
+            if (res.status === 201) {
+                setLoading(false)
+                navigate('/dashboard-admin/manage-user')
+            }
+        })
     }
 
     return (
@@ -62,6 +69,11 @@ const AddUser = () => {
                 </TextField>
             </Box>
             <Button sx={{ mt: 3, px: 5, borderRadius: 2 }} variant='contained' onClick={addNew}>Save</Button>
+            {loading && (
+                <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                    <CircularProgress />
+                </Box>
+            )}
         </div>
     )
 }
